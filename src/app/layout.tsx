@@ -1,12 +1,20 @@
 import "./globals.css";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "@/app/services/Auth";
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import Footer from "@/app/components/footer/index";
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html>
+    <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        {/* 🔹 GoogleOAuthProvider harus membungkus AuthProvider */}
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+          <AuthProvider>{children}</AuthProvider>
+        </GoogleOAuthProvider>
+            <Footer />
       </body>
     </html>
   );

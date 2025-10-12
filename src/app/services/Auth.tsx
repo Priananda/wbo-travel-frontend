@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { api } from "@/app/api/api";
 
 type Role = "user" | "admin" | "super_admin";
@@ -18,13 +24,14 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  setUser: (user: User) => void; // ✅ ditambahkan agar bisa dipakai di login Google
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
-  const [loading, setLoading] = useState(true); // ⬅️ Loading state
+  const [loading, setLoading] = useState(true);
 
   const getCsrf = async () => {
     await api.get("/sanctum/csrf-cookie");
@@ -46,13 +53,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     const currentRole = user?.role;
-
     try {
       await api.post("/logout");
     } catch (e) {
       console.error("Logout failed:", e);
     }
-
     localStorage.removeItem("token");
     setUser(null);
 
@@ -65,12 +70,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await api.get("/me");
-      setUser(res.data.user);
-    } catch {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const res = await api.get("/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data.user);
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
+      console.error("Fetch user gagal:", err);
       setUser(null);
     } finally {
-      setLoading(false); // ✅ selesai loading
+      setLoading(false);
     }
   };
 
@@ -79,7 +92,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, logout, register, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -90,3 +105,5 @@ export const useAuth = () => {
   if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };
+
+

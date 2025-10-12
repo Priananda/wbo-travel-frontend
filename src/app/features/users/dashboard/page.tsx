@@ -1,61 +1,91 @@
 "use client";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import Link from "next/link";
+// import Image from "next/image";
+import dynamic from "next/dynamic";
+const WhyChooseUs = dynamic(() => import("@/app/components/whyChoosesUs/index"), { ssr: true });
+const PackageList = dynamic(() => import("@/app/features/users/packages/page"), { ssr: false });
 
-import { useAuth } from "@/app/services/Auth";
+import "@/app/styles/marquee.css"; 
+// import { useAuth } from "@/app/services/Auth";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
-import Navbar from "@/app/components/navbar/page";
+import Navbar from "@/app/components/navbar/index";
+import { hkGrotesk } from "@/app/fonts/fonts"
+import { LaBelleAurore } from "@/app/fonts/fonts"
 
 export default function UserDashboard() {
-  const { user, logout } = useAuth();
+  // const { user, logout } = useAuth();
+  useEffect(() => {
+  AOS.init({
+    duration: 800, // durasi animasi
+    easing: "ease-in-out", // gaya animasi
+    once: true, // hanya animasi sekali
+  });
+}, []);
+
+
 
   return (
     <ProtectedRoute allowedRoles={["user"]}>
-      <Navbar />
+      <div className="absolute top-0 left-0 w-full z-50">
+        <Navbar />
+      </div>
 
-      {/* Hero Section dengan video latar */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen text-white overflow-hidden">
-        {/* Video background */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-white overflow-hidden">
         <video
           className="absolute inset-0 w-full h-full object-cover"
-          src="/videos/testing.mp4"      // ganti path sesuai lokasi file videomu
+          src="/videos/testing.mp4"
           autoPlay
           loop
           muted
           playsInline
         />
+        <div className="absolute inset-0 bg-black/50"></div>
 
-       
-        {/* Konten utama */}
-        <div className="relative z-10 text-center">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-3 font-[Poppins] drop-shadow-lg">
-            Bali Sundaram Travel
+        <div className="relative text-center z-10">
+           <p className={`mt-40 mb-6 text-4xl text-yellow-500 tracking-wider ${LaBelleAurore.className}`}>Welcome to</p>
+
+          <h1 data-aos="fade-down" className={`mb-6 text-7xl text-white tracking-wide font-semibold ${hkGrotesk.className}`}>
+            WISATA BALI OKE
           </h1>
-          <p className="text-xl font-[Dancing Script] mb-8 drop-shadow-md">
-            Your Colorful Holiday
+          <p data-aos="zoom-in" className={`mb-10 text-lg text-medium ${hkGrotesk.className}`}>
+            Powered by PT Bali Sundaram Travel
           </p>
 
-          {/* Search bar */}
-          <div className="flex items-center bg-white text-gray-600 rounded-full w-[90%] max-w-xl mx-auto px-4 py-3 shadow-md">
-            <input
-              type="text"
-              placeholder="Where to go?"
-              className="w-full bg-transparent focus:outline-none text-gray-700 placeholder-gray-400"
-            />
-          </div>
+          <Link
+           href=""
+          className={`px-6 py-3 text-lg bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg hover:from-teal-800 hover:to-cyan-600 transition duration-300 transform hover:scale-110 font-semibold ${hkGrotesk.className}`}>
+          Explore Destinations
+          </Link>
+          
+          
         </div>
+          <div className="mt-16 overflow-hidden relative w-full max-w-7xl">
+            <div className="animate-marquee whitespace-nowrap flex space-x-10">
+              {["Explore Bali","Enjoy Nature", "Discover Culture", "Relax by the Beach", "Create Memories", "Adventure awaits", "Experience the taste of Bali",].map(
+                (text, i) => (
+                  <span
+                    key={i}
+                    className={`text-md font-medium text-white tracking-wide ${hkGrotesk.className}`}
+                  >
+                    {text}
+                  </span>
+                )
+              )}
+            </div>
+          </div>
       </section>
 
-      {/* Info user */}
-      <div className="flex flex-col items-center justify-center py-10 bg-gray-50">
-        <h1 className="text-3xl font-bold">Welcome, {user?.name}</h1>
-        <p className="text-gray-600 mb-4">Role: {user?.role}</p>
+   
+<WhyChooseUs />
+<PackageList />
 
-        <button
-          onClick={logout}
-          className="bg-gradient-to-r from-red-600 to-rose-500 text-white px-6 py-2 rounded-full hover:from-red-700 hover:to-rose-600 transition"
-        >
-          Logout
-        </button>
-      </div>
     </ProtectedRoute>
+    
   );
 }
+
+
+
