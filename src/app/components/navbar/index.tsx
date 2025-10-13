@@ -24,10 +24,10 @@ export default function Navbar() {
 
   // List menu
   const menuItems = [
-    { href: "/dashboard", label: "Home" },
+    { href: "/features/users/dashboard", label: "Home" },
     { href: "/packages", label: "Paket Bali Tour" },
-    { href: "/about", label: "Gallery" },
-    { href: "/c", label: "Kontak" },
+    { href: "/features/users/gallery", label: "Gallery" },
+    { href: "/features/users/contact", label: "Kontak" },
     { href: "/a", label: "Tentang Kami" },
     { href: "/t", label: "Blog" },
   ];
