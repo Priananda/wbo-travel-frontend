@@ -1,4 +1,3 @@
-// ⛔️ Jangan pakai "use client" — biarkan ini jadi Server Component (SSG)
 import Image from "next/image";
 import { hkGrotesk } from "@/app/fonts/fonts";
 
@@ -41,7 +40,7 @@ export default function WhyChooseUs() {
         </div>
 
         <p className="mb-12 text-lg text-gray-800">
-          Ada banyak alasan menggunakan Wisata Bali Oke sebagai pilihan layanan tour di Bali
+          Nikmati perjalanan tak terlupakan dengan destinasi terbaik, layanan nyaman, dan pengalaman seru bersama kami.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

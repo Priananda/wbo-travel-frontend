@@ -108,7 +108,7 @@ export default function Navbar() {
 
       {/* 🔹 NAVBAR UTAMA */}
       <header
-        className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 shadow-md rounded-2xl w-[90%] max-w-6xl ${
+        className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 shadow-md rounded-2xl w-[99%] max-w-6xl ${
           scrolled ? "top-2 bg-white" : "top-[60px] bg-white"
         }`}
       >
