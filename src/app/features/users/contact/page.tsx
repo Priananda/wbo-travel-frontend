@@ -4,10 +4,8 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Navbar from "@/app/components/navbar/index";
-
 import { MapPin, Phone, Mail } from "lucide-react";
-import { hkGrotesk } from "@/app/fonts/fonts";
-import { LaBelleAurore } from "@/app/fonts/fonts";
+import { hkGrotesk, LaBelleAurore } from "@/app/fonts/fonts";
 
 export default function ContactPage() {
   useEffect(() => {
@@ -15,13 +13,15 @@ export default function ContactPage() {
   }, []);
 
   return (
-     
-    <div className="w-full">
-<div className="absolute top-0 left-0 w-full z-50">
-          <Navbar />
-        </div>
+    <div className="w-full relative bg-white">
+      {/* Navbar */}
+      <div className="fixed top-0 left-0 w-full z-50">
+        <Navbar />
+      </div>
+
       {/* Google Maps Embed */}
-      <div className="w-full h-[480px]">
+      <div className="w-full h-[480px] relative z-0 mt-[135px]"> 
+        {/* mt-[90px] agar tidak ketutup navbar */}
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15778.636017028604!2d115.24225067035157!3d-8.628697343758203!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd23f70b5a75011%3A0x4661f47875fd033f!2sPT.%20Bali%20Sundaram%20Travel!5e0!3m2!1sid!2sid!4v1760363580811!5m2!1sid!2sid"
           width="100%"
@@ -34,29 +34,32 @@ export default function ContactPage() {
       </div>
 
       {/* Contact Section */}
-      <div className="relative z-20 bg-white -mt-20 rounded-xl shadow-md mb-10 max-w-6xl mx-auto px-6 py-20">
-
+      <div className="-mt-14 relative z-20 bg-white rounded-xl shadow-md mb-10 max-w-6xl mx-auto px-6 py-20 -translate-y-20 md:-translate-y-28">
         <h2
           data-aos="fade-up"
           className={`text-center text-3xl mb-2 text-teal-600 tracking-wider ${LaBelleAurore.className}`}
         >
           Contact Us
         </h2>
-         <div className="mt-5 flex flex-col items-center justify-center mb-6 md:flex-row">
-            <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full mb-3 md:mb-0 md:mr-4"></div>
-            <h2 className={`text-3xl md:text-4xl text-slate-900 drop-shadow-sm font-semibold ${hkGrotesk.className}`}>
-              Get In Touch
-            </h2>
-          </div>
-          <p className={`mb-10 text-lg text-center text-gray-800 font-medium ${hkGrotesk.className}`}>
-            We are at your disposal 7 days a week!
-          </p>
 
+        <div className="mt-5 flex flex-col items-center justify-center mb-6 md:flex-row">
+          <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full mb-3 md:mb-0 md:mr-4"></div>
+          <h2
+            className={`text-3xl md:text-4xl text-slate-900 drop-shadow-sm font-semibold ${hkGrotesk.className}`}
+          >
+            Get In Touch
+          </h2>
+        </div>
 
+        <p
+          className={`mb-10 text-lg text-center text-gray-800 font-medium ${hkGrotesk.className}`}
+        >
+          We are at your disposal 7 days a week!
+        </p>
 
+        {/* Contact Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-center">
-
-          {/* Item */}
+          {/* Store Location */}
           <div
             data-aos="fade-up"
             data-aos-delay="300"
@@ -69,13 +72,15 @@ export default function ContactPage() {
               <h3 className={`text-lg font-semibold ${hkGrotesk.className}`}>
                 Store Location
               </h3>
-              <p className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}>
+              <p
+                className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}
+              >
                 JL. Pudak No 3A Batubulan, Kec. Sukawati, Gianyar
               </p>
             </div>
           </div>
 
-          {/* Item */}
+          {/* Phone Numbers */}
           <div
             data-aos="fade-up"
             data-aos-delay="400"
@@ -88,16 +93,20 @@ export default function ContactPage() {
               <h3 className={`text-lg font-semibold ${hkGrotesk.className}`}>
                 Phone Number
               </h3>
-              <p className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}>
+              <p
+                className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}
+              >
                 +6281338905757
               </p>
-              <p className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}>
+              <p
+                className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}
+              >
                 +6285333775517
               </p>
             </div>
           </div>
 
-          {/* Item */}
+          {/* Email */}
           <div
             data-aos="fade-up"
             data-aos-delay="500"
@@ -110,15 +119,15 @@ export default function ContactPage() {
               <h3 className={`text-lg font-semibold ${hkGrotesk.className}`}>
                 Email us
               </h3>
-              <p className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}>
+              <p
+                className={`text-gray-800 text-md font-medium ${hkGrotesk.className}`}
+              >
                 idbalisundaram@gmail.com
               </p>
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
   );
 }

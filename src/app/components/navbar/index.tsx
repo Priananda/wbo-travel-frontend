@@ -28,7 +28,7 @@ export default function Navbar() {
     { href: "/packages", label: "Paket Bali Tour" },
     { href: "/features/users/gallery", label: "Gallery" },
     { href: "/features/users/contact", label: "Kontak" },
-    { href: "/a", label: "Tentang Kami" },
+    { href: "/features/users/about-us", label: "Tentang Kami" },
     { href: "/t", label: "Blog" },
   ];
 

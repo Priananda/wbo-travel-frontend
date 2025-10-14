@@ -106,7 +106,7 @@ export default function PackagesPage() {
   href={`/packages/${pkg.slug}`}
   className={`inline-block mt-4 bg-cyan-700 
      hover:bg-cyan-800 
-     text-white px-5 py-2 rounded-lg 
+     text-white px-5 py-2 rounded-lg shadow-sm
      transition-all duration-300 font-medium ${hkGrotesk.className}`}
 >
   Explore
