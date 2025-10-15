@@ -21,6 +21,12 @@ import { hkGrotesk } from "@/app/fonts/fonts";
 import Navbar from "@/app/components/navbar";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 import testing from "@/app/assets/images/testing.jpg";
+import melastibeach from "@/app/assets/images/melastibeach.jpg";
+import kelingkingbeach from "@/app/assets/images/kelingkingbeach.jpg";
+import pandawabeach from "@/app/assets/images/pandawabeach.jpeg";
+import tanahlot from "@/app/assets/images/tanahlot.jpg";
+import ulundanutemple from "@/app/assets/images/ulundanutemple.jpg";
+import uluwatutemple from "@/app/assets/images/uluwatutemple.jpg";
 
 type ImgSource = StaticImageData | string;
 
@@ -33,12 +39,13 @@ type GalleryItem = {
 };
 
 const galleryData: GalleryItem[] = [
-  { id: 1, title: "Kelingking Beach", description: "Travel & Food", category: "pantai", image: testing },
-  { id: 2, title: "Melasti Beach", description: "Travel & Food", category: "pantai", image: testing },
-  { id: 3, title: "Pandawa Beach", description: "Travel & Food", category: "pura", image: testing },
-  { id: 4, title: "Ulundanu Beratan", description: "Travel & Food", category: "pantai", image: testing },
-  { id: 5, title: "Tanah Lot", description: "Travel & Food", category: "pantai", image: testing },
-  { id: 6, title: "Uluwatu Temple", description: "Travel & Food", category: "pura", image: testing },
+  { id: 1, title: "Kelingking Beach", description: "Travel & Food", category: "pantai", image: kelingkingbeach },
+  { id: 2, title: "Melasti Beach", description: "Travel & Food", category: "pantai", image: melastibeach },
+  { id: 3, title: "Pandawa Beach", description: "Travel & Food", category: "pura", image: pandawabeach },
+  { id: 4, title: "Ulundanu Beratan", description: "Travel & Food", category: "pantai", image: ulundanutemple },
+  { id: 5, title: "Tanah Lot", description: "Travel & Food", category: "pantai", image: tanahlot },
+  { id: 6, title: "Uluwatu Temple", description: "Travel & Food", category: "pura", image: uluwatutemple },
+  { id: 7, title: "Uluwatu Temple", description: "Travel & Food", category: "pura", image: uluwatutemple },
 ];
 
 const categories = ["all", "pantai", "pura"];
