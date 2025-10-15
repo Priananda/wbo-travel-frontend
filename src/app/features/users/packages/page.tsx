@@ -51,7 +51,7 @@ export default function PackagesPage() {
     <section className="py-16 px-8 bg-gradient-to-b from-teal-50 to-cyan-50">
       <div className="max-w-6xl mx-auto text-center">
        <div className="flex flex-col items-center justify-center mb-6 md:flex-row">
-                <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full mb-3 md:mb-0 md:mr-4"></div>
+                <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-700 rounded-full mb-3 md:mb-0 md:mr-4"></div>
                 <h2
                   className={`text-3xl md:text-4xl text-black drop-shadow-sm font-semibold text-center md:text-left ${hkGrotesk.className}`}
                 >

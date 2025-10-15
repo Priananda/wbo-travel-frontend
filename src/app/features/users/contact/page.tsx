@@ -43,9 +43,9 @@ export default function ContactPage() {
         </h2>
 
         <div className="mt-5 flex flex-col items-center justify-center mb-6 md:flex-row">
-          <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full mb-3 md:mb-0 md:mr-4"></div>
+          <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-700 rounded-full mb-3 md:mb-0 md:mr-4"></div>
           <h2
-            className={`text-3xl md:text-4xl text-slate-900 drop-shadow-sm font-semibold ${hkGrotesk.className}`}
+            className={`text-3xl md:text-4xl text-black drop-shadow-sm font-semibold ${hkGrotesk.className}`}
           >
             Get In Touch
           </h2>
