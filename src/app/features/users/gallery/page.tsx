@@ -20,13 +20,13 @@ import {
 import { hkGrotesk } from "@/app/fonts/fonts";
 import Navbar from "@/app/components/navbar";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
-import testing from "@/app/assets/images/testing.jpg";
 import melastibeach from "@/app/assets/images/melastibeach.jpg";
 import kelingkingbeach from "@/app/assets/images/kelingkingbeach.jpg";
 import pandawabeach from "@/app/assets/images/pandawabeach.jpeg";
 import tanahlot from "@/app/assets/images/tanahlot.jpg";
 import ulundanutemple from "@/app/assets/images/ulundanutemple.jpg";
 import uluwatutemple from "@/app/assets/images/uluwatutemple.jpg";
+import brokenbeach from "@/app/assets/images/brokenbeach.jpg";
 
 type ImgSource = StaticImageData | string;
 
@@ -45,7 +45,7 @@ const galleryData: GalleryItem[] = [
   { id: 4, title: "Ulundanu Beratan", description: "Travel & Food", category: "pantai", image: ulundanutemple },
   { id: 5, title: "Tanah Lot", description: "Travel & Food", category: "pantai", image: tanahlot },
   { id: 6, title: "Uluwatu Temple", description: "Travel & Food", category: "pura", image: uluwatutemple },
-  { id: 7, title: "Uluwatu Temple", description: "Travel & Food", category: "pura", image: uluwatutemple },
+  { id: 7, title: "Broken Beach", description: "Travel & Food", category: "pantai", image: brokenbeach },
 ];
 
 const categories = ["all", "pantai", "pura"];
