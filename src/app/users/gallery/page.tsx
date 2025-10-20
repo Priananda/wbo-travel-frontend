@@ -177,7 +177,7 @@ export default function GalleryPage() {
   const thumbContainerStyle: React.CSSProperties = { scrollbarWidth: "none" };
 
   return (
-    <ProtectedRoute allowedRoles={["user"]}>
+    // <ProtectedRoute allowedRoles={["user"]}>
       <div className="relative min-h-screen bg-white">
         {/* Navbar */}
         <div className="absolute top-0 left-0 w-full z-50">
@@ -371,7 +371,7 @@ export default function GalleryPage() {
           </div>
         )}
       </div>
-    </ProtectedRoute>
+    // </ProtectedRoute>
   );
 }
 

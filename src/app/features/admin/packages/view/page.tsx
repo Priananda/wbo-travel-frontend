@@ -8,33 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/app/services/Auth";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 import Image from "next/image";
-
-// // 🧩 Interface data
-// interface PaketTour {
-//   id: number;
-//   title: string;
-//   slug: string;
-//   description: string;
-//   price: number;
-//   stock: number;
-//   location: string;
-//   image?: string;
-//   active: boolean;
-//   created_at?: string;
-//   updated_at?: string;
-// }
-
-// interface EditFormData {
-//   title: string;
-//   slug: string;
-//   description: string;
-//   price: number | string;
-//   stock: number | string;
-//   location: string;
-//   image: File | null;
-//   active: boolean;
-// }
-// Tambahkan di interface PaketTour
 interface PaketTour {
   id: number;
   title: string;
@@ -88,10 +61,14 @@ export default function ViewPaketTourPage() {
     if (!token) return;
     setLoading(true);
     try {
-      const res = await axios.get<PaketTour[]>(apiUrl, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setPakets(res.data);
+     const res = await axios.get(apiUrl, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+      const data = Array.isArray(res.data)
+  ? res.data
+  : res.data.data || [];
+
+setPakets(data);
     } catch (err) {
       console.error("Gagal ambil data paket:", err);
     } finally {

@@ -28,25 +28,16 @@ export default function PaketTourPage() {
   const [totalItems, setTotalItems] = useState(0);
   const perPage = 8;
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
   const fetchPackages = async () => {
-    if (!token) return setLoading(false);
     setLoading(true);
-
     try {
-      const res = await axios.get(
-        "http://127.0.0.1:8000/api/paket-tours",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            page,
-            per_page: perPage,
-            sort, // default | popularity | rating | latest | price_asc | price_desc
-          },
-        }
-      );
+      const res = await axios.get("http://127.0.0.1:8000/api/paket-tours", {
+        params: {
+          page,
+          per_page: perPage,
+          sort, // default | latest | price_asc | price_desc
+        },
+      });
 
       setPackages(res.data.data);
       setTotalPages(res.data.meta.last_page);
@@ -157,7 +148,7 @@ export default function PaketTourPage() {
         )}
 
         {Array.from({ length: totalPages }, (_, i) => i + 1)
-          .filter((p) => Math.abs(p - page) <= 2) // tampilkan hanya sekitar
+          .filter((p) => Math.abs(p - page) <= 2)
           .map((p) => (
             <button
               key={p}
@@ -184,6 +175,217 @@ export default function PaketTourPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import Image from "next/image";
+// import Link from "next/link";
+// import { Loader2 } from "lucide-react";
+// import dayjs from "dayjs";
+// import FavoriteButton from "@/app/components/FavoriteButton";
+
+// interface PaketTour {
+//   id: number;
+//   title: string;
+//   slug: string;
+//   price: string | number;
+//   duration_days?: number;
+//   duration_nights?: number;
+//   image: string;
+//   created_at: string;
+// }
+
+// export default function PaketTourPage() {
+//   const [packages, setPackages] = useState<PaketTour[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [page, setPage] = useState(1);
+//   const [totalPages, setTotalPages] = useState(1);
+//   const [sort, setSort] = useState("default");
+//   const [totalItems, setTotalItems] = useState(0);
+//   const perPage = 8;
+
+//   const token =
+//     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+//   const fetchPackages = async () => {
+//     if (!token) return setLoading(false);
+//     setLoading(true);
+
+//     try {
+//       const res = await axios.get(
+//         "http://127.0.0.1:8000/api/paket-tours",
+//         {
+//           headers: { Authorization: `Bearer ${token}` },
+//           params: {
+//             page,
+//             per_page: perPage,
+//             sort, // default | popularity | rating | latest | price_asc | price_desc
+//           },
+//         }
+//       );
+
+//       setPackages(res.data.data);
+//       setTotalPages(res.data.meta.last_page);
+//       setTotalItems(res.data.meta.total);
+//     } catch (err) {
+//       console.error(err);
+//       setPackages([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchPackages();
+//   }, [page, sort]);
+
+//   const isFeatured = (created_at: string) =>
+//     dayjs().diff(dayjs(created_at), "day") < 7;
+
+//   if (loading)
+//     return (
+//       <Loader2 className="animate-spin text-cyan-700 w-8 h-8 mx-auto mt-24" />
+//     );
+
+//   return (
+//     <div className="max-w-6xl mx-auto px-4 py-10">
+//       {/* 🔹 Result Count + Sorting */}
+//       <div className="flex justify-between items-center mb-4 text-sm text-gray-600">
+//         <p>
+//           Showing {(page - 1) * perPage + 1}–
+//           {Math.min(page * perPage, totalItems)} of {totalItems} results
+//         </p>
+
+//         <select
+//           value={sort}
+//           onChange={(e) => {
+//             setSort(e.target.value);
+//             setPage(1);
+//           }}
+//           className="border px-3 py-1 rounded-md"
+//         >
+//           <option value="default">Default sorting</option>
+//           <option value="latest">Sort by latest</option>
+//           <option value="price_asc">Sort by price: low to high</option>
+//           <option value="price_desc">Sort by price: high to low</option>
+//         </select>
+//       </div>
+
+//       {/* 🔹 Grid Paket */}
+//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//         {packages.map((pkg) => (
+//           <div
+//             key={pkg.id}
+//             className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition flex flex-col"
+//           >
+//             <div className="relative w-full h-56">
+//               <Image
+//                 src={`http://127.0.0.1:8000/storage/${pkg.image}`}
+//                 alt={pkg.title}
+//                 fill
+//                 className="object-cover"
+//               />
+//               {isFeatured(pkg.created_at) && (
+//                 <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-md">
+//                   Featured
+//                 </span>
+//               )}
+//               <div className="absolute top-2 right-2">
+//                 <FavoriteButton paketId={pkg.id} />
+//               </div>
+//             </div>
+
+//             <div className="p-4 flex flex-col flex-grow justify-between">
+//               <span className="inline-block px-3 py-1 bg-teal-50 text-teal-600 text-sm rounded-md font-semibold mb-2">
+//                 ⏱️ {pkg.duration_days ?? "-"} Hari {pkg.duration_nights ?? "-"}{" "}
+//                 Malam
+//               </span>
+
+//               <h3 className="text-lg font-semibold text-gray-900 hover:text-teal-600 cursor-pointer mb-2">
+//                 {pkg.title}
+//               </h3>
+
+//               <div className="flex items-center justify-between mt-2">
+//                 <p className="text-base font-bold text-gray-900">
+//                   Rp{Number(pkg.price).toLocaleString("id-ID")}
+//                 </p>
+//                 <Link
+//                   href={`/packages/${pkg.slug}`}
+//                   className="bg-cyan-700 hover:bg-cyan-800 text-white px-3 py-1 rounded-md text-sm"
+//                 >
+//                   Explore
+//                 </Link>
+//               </div>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* 🔹 Pagination */}
+//       <div className="flex justify-center mt-6 space-x-2">
+//         {page > 1 && (
+//           <button
+//             onClick={() => setPage(page - 1)}
+//             className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+//           >
+//             ‹
+//           </button>
+//         )}
+
+//         {Array.from({ length: totalPages }, (_, i) => i + 1)
+//           .filter((p) => Math.abs(p - page) <= 2) // tampilkan hanya sekitar
+//           .map((p) => (
+//             <button
+//               key={p}
+//               onClick={() => setPage(p)}
+//               className={`px-4 py-2 rounded-md ${
+//                 p === page
+//                   ? "bg-red-500 text-white"
+//                   : "bg-gray-200 hover:bg-gray-300"
+//               }`}
+//             >
+//               {p}
+//             </button>
+//           ))}
+
+//         {page < totalPages && (
+//           <button
+//             onClick={() => setPage(page + 1)}
+//             className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+//           >
+//             ›
+//           </button>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
 
 
 

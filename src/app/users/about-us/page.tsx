@@ -203,9 +203,18 @@ export default function HomePage() {
               </div>
             </div>
 
-            <button className="bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm text-white font-semibold px-6 py-3 cursor-pointer">
-              Contact Us
-            </button>
+            <button
+  onClick={() =>
+    window.open(
+      "https://wa.me/6281338905757?text=Halo%20Bali%20Sundaram%20Travel!%20Ada%20yang%20bisa%20kami%20bantu?",
+      "_blank"
+    )
+  }
+  className="bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm text-white font-semibold px-6 py-3 cursor-pointer transition-all"
+>
+  Contact Us
+</button>
+
           </motion.div>
 
           {/* Kolom Kanan */}
