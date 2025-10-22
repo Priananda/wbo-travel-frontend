@@ -5,8 +5,10 @@ import "aos/dist/aos.css";
 import Link from "next/link";
 // import Image from "next/image";
 import dynamic from "next/dynamic";
-const WhyChooseUs = dynamic(() => import("@/app/components/whyChoosesUs/index"), { ssr: true });
 // const PackageList = dynamic(() => import("@/app/users/packages/page"), { ssr: false });
+
+const WhyChooseUs = dynamic(() => import("@/app/components/whyChoosesUs/index"), { ssr: true });
+const PackageList = dynamic(() => import("@/app/components/packagesListDashboard"), { ssr: false });
 
 import "@/app/styles/marquee.css"; 
 // import { useAuth } from "@/app/services/Auth";
@@ -56,7 +58,7 @@ export default function UserDashboard() {
           </p>
 
           <Link
-           href=""
+           href="/packages"
           className={`px-6 py-3 text-lg bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg hover:from-teal-800 hover:to-cyan-600 transition duration-300 transform hover:scale-110 font-semibold ${hkGrotesk.className}`}>
           Explore Destinations
           </Link>
@@ -81,7 +83,7 @@ export default function UserDashboard() {
 
    
 <WhyChooseUs />
-{/* <PackageList /> */}
+<PackageList />
 
     </>
   );

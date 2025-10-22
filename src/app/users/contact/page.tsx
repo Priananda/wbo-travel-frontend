@@ -72,14 +72,14 @@ export default function ContactPage() {
               <h3 className={`text-lg font-semibold ${hkGrotesk.className}`}>
                 Store Location
               </h3>
-              <a
+              <Link
                 href="https://www.google.com/maps?q=PT.+Bali+Sundaram+Travel,+JL.+Pudak+No+3A+Batubulan,+Gianyar"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`text-gray-800 text-md font-medium hover:text-teal-600 ${hkGrotesk.className}`}
               >
                 JL. Pudak No 3A Batubulan, Kec. Sukawati, Gianyar
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -99,7 +99,7 @@ export default function ContactPage() {
            
 
 <Link
-  href="https://wa.me/6281338905757?text=Halo%20Bali%20Sundaram%20Travel!%20Ada%20yang%20bisa%20kami%20bantu?"
+  href="https://wa.me/6281338905757?text=Halo,%20ada%20yang%20bisa%20kami%20bantu?"
   target="_blank"
   rel="noopener noreferrer"
   className={`text-gray-800 text-md font-medium hover:text-teal-600 block ${hkGrotesk.className}`}
@@ -108,7 +108,7 @@ export default function ContactPage() {
 </Link>
 
 <Link
-  href="https://wa.me/6285333775517?text=Halo%20Bali%20Wisata%20Oke!%20Ada%20yang%20bisa%20kami%20bantu?"
+  href="https://wa.me/6285333775517?text=Halo,%20ada%20yang%20bisa%20kami%20bantu?"
   target="_blank"
   rel="noopener noreferrer"
   className={`text-gray-800 text-md font-medium hover:text-teal-600 block ${hkGrotesk.className}`}
@@ -132,12 +132,12 @@ export default function ContactPage() {
               <h3 className={`text-lg font-semibold ${hkGrotesk.className}`}>
                 Email Us
               </h3>
-              <a
-                href="mailto:idbalisundaram@gmail.com?subject=Halo%20Bali%20Sundaram%20Travel&body=Halo,%20saya%20ingin%20bertanya%20tentang%20paket%20tour."
+              <Link
+                href="mailto:idbalisundaram@gmail.com?subject=Halo&body=Halo,%20ada%20yang%20bisa%20kami%20bantu?" 
                 className={`text-gray-800 text-md font-medium hover:text-teal-600 ${hkGrotesk.className}`}
               >
                 idbalisundaram@gmail.com
-              </a>
+              </Link>
             </div>
           </div>
         </div>

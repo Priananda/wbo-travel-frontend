@@ -60,7 +60,7 @@ export default function InputBlogPage() {
   // 🖼️ Validasi file upload
   const handleFile = (file: File) => {
     const validTypes = ["image/jpeg", "image/jpg", "image/png"];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 20 * 1024 * 1024; // 20MB
 
     if (!validTypes.includes(file.type)) {
       setError("Format gambar hanya boleh JPG atau PNG.");
@@ -69,7 +69,7 @@ export default function InputBlogPage() {
     }
 
     if (file.size > maxSize) {
-      setError("Ukuran gambar maksimal 2MB.");
+      setError("Ukuran gambar maksimal 20MB.");
       setFormData({ ...formData, image: null });
       return;
     }

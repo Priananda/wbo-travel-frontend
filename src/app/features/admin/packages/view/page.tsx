@@ -314,20 +314,23 @@ const handleEditChange = (
                             "-"
                           )}
                         </td>
-                        <td className="px-4 py-4 flex gap-2   justify-end">
-                          <button
-                            onClick={() => openEditModal(paket)}
-                            className="flex items-center gap-1 px-3 py-1 border border-cyan-700 text-cyan-700 rounded-md hover:bg-cyan-700 hover:text-white transition"
-                          >
-                            <Pencil size={16} /> Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(paket.id)}
-                            className="flex items-center gap-1 px-3 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition"
-                          >
-                            <Trash2 size={16} /> Hapus
-                          </button>
-                        </td>
+                        <td className="px-4 py-4 text-center align-middle">
+  <div className="flex justify-center items-center gap-2">
+    <button
+      onClick={() => openEditModal(paket)}
+      className="flex items-center gap-1 px-3 py-1 border border-cyan-700 text-cyan-700 rounded-md hover:bg-cyan-700 hover:text-white transition"
+    >
+      <Pencil size={16} /> Edit
+    </button>
+    <button
+      onClick={() => handleDelete(paket.id)}
+      className="flex items-center gap-1 px-3 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition"
+    >
+      <Trash2 size={16} /> Hapus
+    </button>
+  </div>
+</td>
+
                       </tr>
                     ))
                   ) : (

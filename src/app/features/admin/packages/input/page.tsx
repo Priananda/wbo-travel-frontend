@@ -69,24 +69,25 @@ export default function InputPaketTourPage() {
 
   // 🖼️ Validasi file upload
   const handleFile = (file: File) => {
-    const validTypes = ["image/jpeg", "image/jpg", "image/png"];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+  const validTypes = ["image/jpeg", "image/jpg", "image/png"];
+  const maxSize = 20 * 1024 * 1024; // 20MB
 
-    if (!validTypes.includes(file.type)) {
-      setError("Format gambar hanya boleh JPG atau PNG.");
-      setFormData({ ...formData, image: null });
-      return;
-    }
+  if (!validTypes.includes(file.type)) {
+    setError("Format gambar hanya boleh JPG atau PNG.");
+    setFormData({ ...formData, image: null });
+    return;
+  }
 
-    if (file.size > maxSize) {
-      setError("Ukuran gambar maksimal 2MB.");
-      setFormData({ ...formData, image: null });
-      return;
-    }
+  if (file.size > maxSize) {
+    setError("Ukuran gambar maksimal 20MB.");
+    setFormData({ ...formData, image: null });
+    return;
+  }
 
-    setError(null);
-    setFormData({ ...formData, image: file });
-  };
+  setError(null);
+  setFormData({ ...formData, image: file });
+};
+
 
   // 📂 Input file biasa
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,15 +126,28 @@ export default function InputPaketTourPage() {
     try {
       const data = new FormData();
 
+      // Object.entries(formData).forEach(([key, value]) => {
+      //   if (value instanceof File) {
+      //     data.append(key, value);
+      //   } else if (key === "active") {
+      //     data.append(key, value ? "1" : "0");
+      //   } else {
+      //     data.append(key, String(value));
+      //   }
+      // });
       Object.entries(formData).forEach(([key, value]) => {
+      if (key === "image") {
+        // Hanya append kalau ada file baru
         if (value instanceof File) {
-          data.append(key, value);
+        data.append(key, value);
+        }
         } else if (key === "active") {
-          data.append(key, value ? "1" : "0");
+        data.append(key, value ? "1" : "0");
         } else {
-          data.append(key, String(value));
+        data.append(key, String(value));
         }
       });
+
 
       const response = await axios.post(
         "http://127.0.0.1:8000/api/admin/paket-tours",
@@ -246,7 +260,7 @@ export default function InputPaketTourPage() {
               {/* Stok */}
               <div>
                 <label className="block text-sm mb-1 text-gray-800 font-medium">
-                  Stok
+                  Maksimal Peserta
                 </label>
                 <input
                   name="stock"
