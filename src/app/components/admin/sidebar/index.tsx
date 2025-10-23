@@ -43,6 +43,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     href: "/features/admin/dashboard",
     icon: <LayoutDashboard size={18} />,
   },
+   {
+    name: "Order User",
+    icon: <FileText size={18} />,
+    sub: [
+      { name: "View Order", href: "/features/admin/cart/view" },
+    ],
+  },
   {
     name: "Paket Tour",
     icon: <FileText size={18} />,

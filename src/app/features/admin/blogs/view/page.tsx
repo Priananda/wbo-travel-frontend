@@ -172,113 +172,124 @@ export default function ViewBlogPage() {
 
   return (
     <ProtectedRoute allowedRoles={["admin"]}>
-      <div className="flex bg-white overflow-hidden">
+      <div className="flex bg-white">
         <Sidebar />
 
-        <main className="flex-1 mt-5 mx-auto overflow-y-auto overflow-x-hidden min-w-0">
-          <div className="max-w-6xl px-4">
-            <h1 className="text-2xl font-semibold mb-6 text-gray-800">
-              View Blog
-            </h1>
+       <main className="flex-1 mt-4 p-1 mx-auto overflow-y-auto overflow-x-hidden min-w-0">
+  <div className="max-w-6xl px-4">
+    <h1 className="text-2xl font-semibold mb-6 text-gray-800 drop-shadow-xs">View Blog</h1>
 
-            {/* 🔍 Search Bar */}
-            <div className="relative mb-4 max-w-xs">
-              <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
-              <input
-                type="text"
-                placeholder="Cari blog..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-700"
-              />
-            </div>
+    {/* 🔍 Search Bar */}
+    <div className="relative mb-4">
+      <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
+      <input
+        type="text"
+        placeholder="Cari blog..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-300"
+      />
+    </div>
 
-            {/* 📋 Tabel Data */}
-            <div className="bg-white rounded-lg w-full overflow-x-auto">
-              <table className="min-w-full text-sm text-left text-gray-600 border-collapse">
-                <thead className="text-xs uppercase bg-gray-50 border-b border-slate-300 text-black">
-                  <tr>
-                    <th className="px-4 py-3">No</th>
-                    <th className="px-4 py-3">Judul</th>
-                     <th className="px-4 py-3">Slug</th>
-                    <th className="px-4 py-3">Kategori</th>
-                    <th className="px-4 py-3">Penulis</th>
-                    <th className="px-4 py-3">Isi Blog</th>
-                    <th className="px-4 py-3">Tanggal</th>
-                    <th className="px-4 py-3">Gambar</th>
-                    <th className="px-4 py-3 text-center">Aksi</th>
-                  </tr>
-                </thead>
+    {/* 📋 Tabel Data */}
+    <div className="bg-white rounded-md shadow-md overflow-hidden border border-slate-200">
+      <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
+        <thead className="text-xs uppercase bg-cyan-800 text-white">
+          <tr>
+            <th className="px-4 py-3">No</th>
+            <th className="px-4 py-3">Judul</th>
+            <th className="px-4 py-3">Slug</th>
+            <th className="px-4 py-3">Kategori</th>
+            <th className="px-4 py-3">Penulis</th>
+            <th className="px-4 py-3">Isi Blog</th>
+            <th className="px-4 py-3">Tanggal</th>
+            <th className="px-4 py-3">Gambar</th>
+            <th className="px-4 py-3 text-center">Aksi</th>
+          </tr>
+        </thead>
 
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={7} className="text-center py-6">
-                        <Loader2 className="animate-spin mx-auto text-cyan-700" />
-                      </td>
-                    </tr>
-                  ) : filteredBlogs.length > 0 ? (
-                    filteredBlogs.map((blog, i) => (
-                      <tr
-                        key={blog.id}
-                        className="border-b border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
-                      >
-                        <td className="px-4 py-4">{i + 1}</td>
-                        <td className="px-4 py-4">{blog.title}</td>
-                        <td className="px-4 py-4">{blog.slug || "-"}</td>
-                        <td className="px-4 py-4">{blog.category || "-"}</td>
-                        <td className="px-4 py-4">{blog.author_email || "-"}</td>
-                        <td className="px-4 py-4">{blog.content || "-"}</td>
-                        <td className="px-4 py-4">
-                          {blog.created_at
-                            ? new Date(blog.created_at).toLocaleDateString()
-                            : "-"}
-                        </td>
-                        <td className="px-4 py-4">
-                          {blog.image ? (
-                            <Image
-                              src={`http://127.0.0.1:8000/storage/${blog.image}`}
-                              alt={blog.title}
-                              width={60}
-                              height={40}
-                              className="rounded-md object-cover border"
-                              unoptimized
-                            />
-                          ) : (
-                            "-"
-                          )}
-                        </td>
-                        <td className="px-4 py-4 text-right flex gap-2 justify-end">
-                          <button
-                            onClick={() => handleEdit(blog.id)}
-                            className="flex items-center gap-1 px-3 py-1 border border-cyan-700 text-cyan-700 rounded-md hover:bg-cyan-700 hover:text-white transition"
-                          >
-                            <Pencil size={16} /> Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(blog.id)}
-                            className="flex items-center gap-1 px-3 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition"
-                          >
-                            <Trash2 size={16} /> Hapus
-                          </button>
-                        </td>
-                      </tr>
-                    ))
+        <tbody>
+          {loading ? (
+            <tr>
+              <td colSpan={9} className="text-center py-6">
+                <Loader2 className="animate-spin mx-auto text-cyan-700" />
+              </td>
+            </tr>
+          ) : filteredBlogs.length > 0 ? (
+            filteredBlogs.map((blog, i) => (
+              <tr
+                key={blog.id}
+                className="border-b border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
+              >
+                <td className="px-4 py-3">{i + 1}</td>
+
+                {/* Judul: batasi panjang */}
+                <td className="px-4 py-3 max-w-[180px] line-clamp-2">
+                  {blog.title}
+                </td>
+
+                <td className="px-4 py-3">{blog.slug || "-"}</td>
+                <td className="px-4 py-3">{blog.category || "-"}</td>
+                <td className="px-4 py-3">{blog.author_email || "-"}</td>
+
+                {/* Isi Blog: tampil 2 baris saja */}
+                <td className="px-4 py-3 max-w-[250px] line-clamp-2">
+                  {blog.content || "-"}
+                </td>
+
+                <td className="px-4 py-3">
+                  {blog.created_at
+                    ? new Date(blog.created_at).toLocaleDateString()
+                    : "-"}
+                </td>
+
+                <td className="px-4 py-3">
+                  {blog.image ? (
+                    <Image
+                      src={`http://127.0.0.1:8000/storage/${blog.image}`}
+                      alt={blog.title}
+                      width={70}
+                      height={50}
+                      className="rounded-md object-cover border border-slate-300"
+                      unoptimized
+                    />
                   ) : (
-                    <tr>
-                      <td
-                        colSpan={7}
-                        className="text-center py-6 text-gray-500 italic"
-                      >
-                        Tidak ada data blog ditemukan.
-                      </td>
-                    </tr>
+                    "-"
                   )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </main>
+                </td>
+
+                <td className="px-4 py-3 text-right flex gap-2 justify-end">
+                  <button
+                    onClick={() => handleEdit(blog.id)}
+                    className="flex items-center gap-1 px-3 py-1 border border-cyan-700 text-cyan-700 rounded-md hover:bg-cyan-700 hover:text-white transition"
+                  >
+                    <Pencil size={16} /> Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(blog.id)}
+                    className="flex items-center gap-1 px-3 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition"
+                  >
+                    <Trash2 size={16} /> Hapus
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={9}
+                className="text-center py-6 text-gray-500 italic"
+              >
+                Tidak ada data blog ditemukan.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
 
         {/* ✏️ Modal Edit */}
         <AnimatePresence>

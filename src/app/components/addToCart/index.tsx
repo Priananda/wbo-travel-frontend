@@ -6,6 +6,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/components/loading/index";
+import { hkGrotesk } from "@/app/fonts/fonts";
 
 interface AddToCartProps {
   paketId: number;
@@ -115,12 +116,12 @@ export default function AddToCart({
   };
 
   return (
-    <div className="relative">
+    <div className="relative ">
       {/* Loading overlay global */}
       {isLoading && <Loading />}
 
       {/* Floating Cart Icon */}
-      <div className="absolute -top-64 -right-8 ">
+      <div className="absolute -top-64 -right-8  md:-top-52 md:-right-6 lg:-top-64 lg:-right-8  ">
         <button
           onClick={() => setIsCartOpen(!isCartOpen)}
           className="relative p-3 bg-white rounded-full shadow-md hover:bg-gray-100 transition"
@@ -141,7 +142,7 @@ export default function AddToCart({
         className={`w-full font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 ${
           added
             ? "bg-slate-500 text-white"
-            : "bg-cyan-600 hover:bg-cyan-700 text-white"
+            : "bg-cyan-700 hover:bg-cyan-800 text-white"
         }`}
       >
         {loading ? (

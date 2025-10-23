@@ -145,9 +145,9 @@ export default function InputBlogPage() {
         <ProtectedRoute allowedRoles={["admin"]}>
     <div className="flex">
       <Sidebar />
-      <main className="flex-1 bg-slate-50 min-h-screen">
+      <main className="flex-1 p-6 bg-slate-50 min-h-screen">
         <div className="bg-white p-8 rounded-lg shadow-md border border-slate-200">
-          <h1 className="text-2xl font-semibold mb-6 text-gray-800">
+          <h1 className="text-2xl font-semibold mb-6 text-gray-800 drop-shadow-xs">
             Input Blog
           </h1>
 

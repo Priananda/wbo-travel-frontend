@@ -223,129 +223,132 @@ const handleEditChange = (
 
   return (
     <ProtectedRoute allowedRoles={["admin"]}>
-      <div className="flex bg-white overflow-hidden">
-        <Sidebar />
-        <main className="flex-1 mt-5 mx-auto overflow-y-auto overflow-x-hidden min-w-0">
-          <div className="max-w-6xl px-4">
-            <h1 className="text-2xl font-semibold mb-6 text-gray-800">
-              Daftar Paket Tour
-            </h1>
+     <div className="flex bg-white p-1">
+  <Sidebar />
+  <main className="flex-1 mt-4 mx-auto overflow-y-auto overflow-x-hidden min-w-0">
+    <div className="max-w-6xl px-4">
+      <h1 className="text-2xl font-semibold mb-6 text-gray-800 drop-shadow-xs">
+        Daftar Paket Tour
+      </h1>
 
-            {/* 🔍 Search Bar */}
-            <div className="relative mb-4 max-w-xs">
-              <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
-              <input
-                type="text"
-                placeholder="Cari paket..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-cyan-700"
-              />
-            </div>
-
-            {/* 📋 Tabel */}
-            <div className="bg-white rounded-lg w-full overflow-x-auto shadow">
-              <table className="min-w-full text-sm text-left text-gray-600 border-collapse">
-                <thead className="text-xs uppercase bg-gray-50 border-b border-slate-300 text-black">
-                  <tr>
-                    <th className="px-4 py-3">No</th>
-                    <th className="px-4 py-3">Judul</th>
-                    <th className="px-4 py-3">Slug</th>
-                    <th className="px-4 py-3">Deskripsi</th>
-                    <th className="px-4 py-3">Lokasi</th>
-                    <th className="px-4 py-3">Durasi Hari</th>
-                    <th className="px-4 py-3">Durasi Malam</th>
-                    <th className="px-4 py-3">Featured (Hari)</th>
-                    <th className="px-4 py-3">Usia Minimal</th>
-                    <th className="px-4 py-3">Penjemputan</th>
-                    <th className="px-4 py-3">Harga</th>
-                    <th className="px-4 py-3">Stok</th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Gambar</th>
-                    <th className="px-4 py-3 text-center">Aksi</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={10} className="text-center py-6">
-                        <Loader2 className="animate-spin mx-auto text-cyan-700" />
-                      </td>
-                    </tr>
-                  ) : filteredPakets.length > 0 ? (
-                    filteredPakets.map((paket, i) => (
-                      <tr
-                        key={paket.id}
-                        className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
-                      >
-                        <td className="px-4 py-4">{i + 1}</td>
-                        <td className="px-4 py-4 font-medium">{paket.title}</td>
-                        <td className="px-4 py-4">{paket.slug}</td>
-                        <td className="px-4 py-4">{paket.description}</td>
-                        <td className="px-4 py-4">{paket.location}</td>
-                        <td className="px-4 py-4">{paket.duration_days}</td>
-                        <td className="px-4 py-4">{paket.duration_nights}</td>
-                        <td className="px-4 py-4">{paket.feature_duration_days}</td>
-                        <td className="px-4 py-4">{paket.minimum_age}</td>
-                        <td className="px-4 py-4">{paket.pickup_location}</td>
-                        <td className="px-4 py-4">
-                          Rp {paket.price.toLocaleString("id-ID")}
-                        </td>
-                        <td className="px-4 py-4">{paket.stock}</td>
-                        <td className="px-4 py-4">
-                          {paket.active ? (
-                            <span className="text-green-600 font-semibold">Aktif</span>
-                          ) : (
-                            <span className="text-red-600 font-semibold">Nonaktif</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-4">
-                          {paket.image ? (
-                            <Image
-                              src={`http://127.0.0.1:8000/storage/${paket.image}`}
-                              alt={paket.title}
-                              width={60}
-                              height={40}
-                              className="rounded-md object-cover border"
-                              unoptimized
-                            />
-                          ) : (
-                            "-"
-                          )}
-                        </td>
-                        <td className="px-4 py-4 text-center align-middle">
-  <div className="flex justify-center items-center gap-2">
-    <button
-      onClick={() => openEditModal(paket)}
-      className="flex items-center gap-1 px-3 py-1 border border-cyan-700 text-cyan-700 rounded-md hover:bg-cyan-700 hover:text-white transition"
-    >
-      <Pencil size={16} /> Edit
-    </button>
-    <button
-      onClick={() => handleDelete(paket.id)}
-      className="flex items-center gap-1 px-3 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition"
-    >
-      <Trash2 size={16} /> Hapus
-    </button>
-  </div>
-</td>
-
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={10} className="text-center py-6 text-gray-500 italic">
-                        Tidak ada data paket tour ditemukan.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </main>
+      {/* 🔍 Search Bar */}
+      <div className="flex mb-4">
+        <input
+          type="text"
+          placeholder="Cari paket..."
+          className=" px-4 py-2 w-full border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-300"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
+
+      {/* 📋 Table */}
+      <div className="bg-white rounded-md shadow-md overflow-x-auto">
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <Loader2 className="animate-spin text-cyan-700" size={30} />
+          </div>
+        ) : (
+          <table className="min-w-full table-auto text-sm">
+            <thead className="bg-cyan-800 text-white">
+              <tr>
+                <th className="px-4 py-3 text-left">No</th>
+                <th className="px-4 py-3 text-left">Judul</th>
+                <th className="px-4 py-3 text-left">Slug</th>
+                <th className="px-4 py-3 text-left">Deskripsi</th>
+                <th className="px-4 py-3 text-left">Lokasi</th>
+                <th className="px-4 py-3 text-left">Durasi (Hari)</th>
+                <th className="px-4 py-3 text-left">Durasi (Malam)</th>
+                <th className="px-4 py-3 text-left">Featured (Hari)</th>
+                <th className="px-4 py-3 text-left">Usia Minimal</th>
+                <th className="px-4 py-3 text-left">Penjemputan</th>
+                <th className="px-4 py-3 text-left">Harga</th>
+                <th className="px-4 py-3 text-left">Stok</th>
+                <th className="px-4 py-3 text-left">Status</th>
+                <th className="px-4 py-3 text-left">Gambar</th>
+                <th className="px-4 py-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredPakets.length > 0 ? (
+                filteredPakets.map((paket, i) => (
+                  <tr
+                    key={paket.id}
+                    className="border-b border-slate-400 hover:bg-gray-50 transition"
+                  >
+                    <td className="px-4 py-3 font-medium">{i + 1}</td>
+                    <td className="px-4 py-3 font-semibold text-gray-800">{paket.title}</td>
+                    <td className="px-4 py-3">{paket.slug}</td>
+                    {/* <td className="px-4 py-3">{paket.description}</td> */}
+                    <td className="px-4 py-3 max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap">
+                      {paket.description}
+                    </td>
+
+                    <td className="px-4 py-3">{paket.location}</td>
+                    <td className="px-4 py-3">{paket.duration_days}</td>
+                    <td className="px-4 py-3">{paket.duration_nights}</td>
+                    <td className="px-4 py-3">{paket.feature_duration_days}</td>
+                    <td className="px-4 py-3">{paket.minimum_age}</td>
+                    <td className="px-4 py-3">{paket.pickup_location}</td>
+                    <td className="px-4 py-3 font-medium text-gray-800">
+                      Rp {paket.price.toLocaleString("id-ID")}
+                    </td>
+                    <td className="px-4 py-3">{paket.stock}</td>
+                    <td className="px-4 py-3">
+                      {paket.active ? (
+                        <span className="text-green-600 font-semibold">Aktif</span>
+                      ) : (
+                        <span className="text-red-600 font-semibold">Nonaktif</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {paket.image ? (
+                        <Image
+                          src={`http://127.0.0.1:8000/storage/${paket.image}`}
+                          alt={paket.title}
+                          width={60}
+                          height={40}
+                          className="rounded-md object-cover border"
+                          unoptimized
+                        />
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-center font-medium">
+                      <div className="flex justify-center items-center gap-2">
+                        <button
+                          onClick={() => openEditModal(paket)}
+                          className="flex items-center gap-1 px-3 py-1 border border-cyan-700 text-cyan-700 rounded-md hover:bg-cyan-700 hover:text-white transition"
+                        >
+                          <Pencil size={16} /> Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(paket.id)}
+                          className="flex items-center gap-1 px-3 py-1 border border-red-500 text-red-500 rounded-md hover:bg-red-600 hover:text-white transition"
+                        >
+                          <Trash2 size={16} /> Hapus
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={15} className="text-center py-6 text-gray-500 italic">
+                    Tidak ada data paket tour ditemukan.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  </main>
+</div>
+ 
 
       {/* 🧩 Modal Edit (Animasi Framer Motion) */}
 <AnimatePresence>

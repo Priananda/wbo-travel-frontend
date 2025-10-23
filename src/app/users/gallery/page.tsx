@@ -184,7 +184,7 @@ export default function GalleryPage() {
           <Navbar />
         </div>
 
-        <section className="px-6 py-24 text-center max-w-7xl mx-auto">
+        <section className="px-3 md:px-3 lg:px-6 py-24 text-center max-w-7xl mx-auto">
           {/* Title */}
           <div className="mt-24 flex flex-col items-center justify-center mb-6 md:flex-row">
             <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full mb-3 md:mb-0 md:mr-4" />
@@ -298,7 +298,7 @@ export default function GalleryPage() {
             {/* Close */}
             <button
               onClick={closeModal}
-              className="absolute top-6 right-6 z-60 p-2 rounded-full border border-white/30 bg-white/5 hover:bg-white/10 cursor-pointer"
+              className="absolute top-5 md:top-6 lg:top-6  right-6 z-60 p-2 rounded-full border border-white/30 bg-white/5 hover:bg-white/10 cursor-pointer"
             >
               <X className="text-white" />
             </button>
@@ -306,19 +306,19 @@ export default function GalleryPage() {
             {/* Navigation */}
             <button
               onClick={prevImage}
-              className="absolute left-6 top-1/2 transform -translate-y-1/2 text-white z-60 p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer"
+              className="absolute hidden md:flex left-6 top-1/2 transform -translate-y-1/2 text-white z-60 p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer"
             >
               <ArrowLeft />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-28 top-1/2 transform -translate-y-1/2 text-white z-60 p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer"
+              className="absolute hidden md:flex right-28 top-1/2 transform -translate-y-1/2 text-white z-60 p-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 cursor-pointer"
             >
               <ArrowRight />
             </button>
 
             {/* Main Image */}
-<div className="mx-auto mt-20 max-w-4xl w-full flex flex-col items-center px-6 text-center">
+<div className="mx-auto mt-24 md:mt-20 lg:mt-20 max-w-4xl w-full flex flex-col items-center px-6 text-center">
   {/* Gambar Utama */}
   <div className="relative flex justify-center">
     <div
