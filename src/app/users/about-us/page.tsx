@@ -14,6 +14,7 @@ import { hkGrotesk } from "@/app/fonts/fonts";
 import { LaBelleAurore } from "@/app/fonts/fonts";
 import AOS from "aos";
 import "aos/dist/aos.css";
+ import WhatsAppButton from "@/app/components/waButton/page";
 
 export default function HomePage() {
   const [count, setCount] = useState(0);
@@ -296,6 +297,7 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+         <WhatsAppButton />
       </section>
     </>
   );

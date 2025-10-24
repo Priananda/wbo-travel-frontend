@@ -1,135 +1,126 @@
-// import { useState, useEffect, useRef } from "react";
-// import Image from "next/image";
+"use client";
 
-// interface Slide {
-//   id: number;
-//   image: string;
-//   title: string;
-//   description: string;
-// }
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import tanahLot from "@/app/assets/images/tanahlot.jpg";
+import brokenBeach from "@/app/assets/images/brokenbeach.jpg";
+import { LaBelleAurore } from "@/app/fonts/fonts";
 
-// export default function Home() {
-//   const [currentSlide, setCurrentSlide] = useState(0);
-//   const [manualSlide, setManualSlide] = useState(false);
-//   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-//   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+const galleryItems = [
+  { id: 1, image: tanahLot, title: "Tanah Lot", description: "Pemandangan laut dan pura ikonik di Bali." },
+  { id: 2, image: brokenBeach, title: "Broken Beach", description: "Pantai legendaris dengan tebing alami memukau." },
+  { id: 3, image: tanahLot, title: "Tanah Lot", description: "Pura di atas batu karang dengan pemandangan sunset." },
+  { id: 4, image: brokenBeach, title: "Broken Beach", description: "Pantai eksotis dengan formasi batu unik." },
+  { id: 5, image: tanahLot, title: "Tanah Lot", description: "Destinasi favorit wisatawan di Bali." },
+  { id: 6, image: brokenBeach, title: "Broken Beach", description: "Panorama laut biru yang memukau." },
+];
 
-//   const slides: Slide[] = [
-//     { id: 1, image: "https://picsum.photos/id/10/800/600", title: "Nature 1", description: "Nature first" },
-//     { id: 2, image: "https://picsum.photos/id/11/800/600", title: "Nature 2", description: "Nature second" },
-//     { id: 3, image: "https://picsum.photos/id/12/800/600", title: "Nature 3", description: "Nature 3th" },
-//     { id: 4, image: "https://picsum.photos/id/13/800/600", title: "Nature 4", description: "Nature last" },
-//     { id: 5, image: "https://picsum.photos/id/14/800/600", title: "Nature 5", description: "Nature 5th" },
-//     { id: 6, image: "https://picsum.photos/id/15/800/600", title: "Nature 6", description: "Nature 6th" },
-//   ];
+export default function GalleryCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [animate, setAnimate] = useState(false);
+  const itemsPerSlide = 3;
+  const totalSlides = Math.ceil(galleryItems.length / itemsPerSlide);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-//   const IMAGES_PER_SLIDE = 3;
+  const triggerAnimation = () => {
+    setAnimate(true);
+    setTimeout(() => setAnimate(false), 700);
+  };
 
-//   const slidesPerGroup: Slide[][] = [];
-//   for (let i = 0; i < slides.length; i += IMAGES_PER_SLIDE) {
-//     slidesPerGroup.push(slides.slice(i, i + IMAGES_PER_SLIDE));
-//   }
-//   const totalSlides = slidesPerGroup.length;
+  const nextSlide = () => {
+    setCurrent((prev) => (prev + 1) % totalSlides);
+    triggerAnimation();
+    setIsPaused(true);
+  };
 
-//   // Fungsi untuk reset timer auto-slide setelah interaksi manual
-//   const resetAutoSlide = () => {
-//     setManualSlide(true);
-//     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-//     timeoutRef.current = setTimeout(() => {
-//       setManualSlide(false); // kembalikan auto-slide setelah 5 detik
-//     }, 5000);
-//   };
+  const prevSlide = () => {
+    setCurrent((prev) => (prev - 1 + totalSlides) % totalSlides);
+    triggerAnimation();
+    setIsPaused(true);
+  };
 
-//   // Auto-slide
-//   useEffect(() => {
-//     if (!manualSlide) {
-//       intervalRef.current = setInterval(() => {
-//         setCurrentSlide((prev) => (prev + 1) % totalSlides);
-//       }, 5000);
-//     }
+  useEffect(() => {
+    if (!isPaused) {
+      intervalRef.current = setInterval(() => {
+        setCurrent((prev) => (prev + 1) % totalSlides);
+        triggerAnimation();
+      }, 4000);
+    }
 
-//     return () => {
-//       if (intervalRef.current) clearInterval(intervalRef.current);
-//     };
-//   }, [manualSlide, totalSlides]);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isPaused, totalSlides]);
 
-//   const handleManualSlide = (newSlide: number) => {
-//     resetAutoSlide();
-//     setCurrentSlide(newSlide);
-//   };
+  return (
+    <div
+      className="relative w-full max-w-[96%] mt-10 mx-auto overflow-hidden py-6 group"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <h1
+        className={`text-center text-cyan-700 text-4xl mt-2 mb-4 drop-shadow-sm ${LaBelleAurore.className}`}
+      >
+        Views Paket Tour
+      </h1>
 
-//   const next = () => handleManualSlide((currentSlide + 1) % totalSlides);
-//   const prev = () => handleManualSlide((currentSlide - 1 + totalSlides) % totalSlides);
+      {/* 🔹 Carousel Container */}
+      <div className="relative">
+        {/* 🔹 Wrapper Slide */}
+        <div
+          className={`flex transition-transform duration-700 ease-in-out`}
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+            <div key={slideIndex} className="flex min-w-full">
+              {galleryItems
+                .slice(slideIndex * itemsPerSlide, slideIndex * itemsPerSlide + itemsPerSlide)
+                .map((item) => (
+                  <div
+                    key={item.id}
+                    className={`w-1/3 px-2 transition-transform duration-700 ${
+                      animate ? "scale-95 animate-zoomIn" : "scale-100"
+                    }`}
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl shadow-md">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                      <div className="absolute bottom-0 w-full bg-cyan-800/80 text-white text-center py-2 text-sm">
+                        <p className="font-semibold">{item.title}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          ))}
+        </div>
 
-//   return (
-//     <div
-//       className="bg-gray-100 min-h-screen flex items-center justify-center"
-//       onMouseEnter={resetAutoSlide} // pause auto-slide saat hover
-//     >
-//       <div className="container mx-auto px-4 py-12 relative">
-//         {/* Carousel wrapper */}
-//         <div className="relative overflow-hidden rounded-lg shadow-xl bg-white group">
-//           <div
-//             className="flex transition-transform duration-700 ease-in-out"
-//             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-//           >
-//             {slidesPerGroup.map((group, index) => (
-//               <div key={index} className="flex w-full flex-shrink-0">
-//                 {group.map((slide) => (
-//                   <div key={slide.id} className="w-1/3 px-2 py-4">
-//                     <div className="rounded-lg overflow-hidden shadow-md h-full relative">
-//                       <div className="bg-gray-200 h-48 md:h-64 flex items-center justify-center relative">
-//                         <Image
-//                           src={slide.image}
-//                           alt={slide.title}
-//                           width={800}
-//                           height={600}
-//                           className="w-full h-full object-cover"
-//                         />
-//                       </div>
-//                       <div className="p-4">
-//                         <h3 className="text-xl font-semibold">{slide.title}</h3>
-//                         <p className="text-gray-600 mt-2">{slide.description}</p>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 ))}
-//               </div>
-//             ))}
-//           </div>
+        {/* 🔹 Tombol Navigasi — kini selalu di tengah */}
+        <div className="absolute inset-y-0 left-5 flex items-center">
+          <button
+            onClick={prevSlide}
+            className="bg-white/90 rounded-full shadow-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-100"
+          >
+            <ChevronLeft className="w-6 h-6 text-gray-700" />
+          </button>
+        </div>
 
-//           {/* Prev */}
-//           <button
-//             onClick={prev}
-//             className="absolute left-2 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:scale-110"
-//           >
-//             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-//               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-//             </svg>
-//           </button>
-
-//           {/* Next */}
-//           <button
-//             onClick={next}
-//             className="absolute right-2 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:scale-110"
-//           >
-//             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-//               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-//             </svg>
-//           </button>
-//         </div>
-
-//         {/* Dots */}
-//         <div className="flex justify-center mt-4 space-x-2">
-//           {slidesPerGroup.map((_, index) => (
-//             <button
-//               key={index}
-//               onClick={() => handleManualSlide(index)}
-//               className={`w-3 h-3 rounded-full transition-colors duration-300 ${currentSlide === index ? "bg-blue-600" : "bg-gray-300"}`}
-//             />
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+        <div className="absolute inset-y-0 right-5 flex items-center">
+          <button
+            onClick={nextSlide}
+            className="bg-white/90 rounded-full shadow-md p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-100"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-700" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

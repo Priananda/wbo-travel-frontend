@@ -10,6 +10,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Loading from "@/app/components/loading/index";
 import Link from "next/link";
+import WhatsAppButton from "@/app/components/waButton/page";
 
 export default function UserLoginPage() {
   const { login, setUser } = useAuth();
@@ -208,6 +209,7 @@ export default function UserLoginPage() {
           />
         </div>
       </div>
+      <WhatsAppButton />
     </div>
   );
 }

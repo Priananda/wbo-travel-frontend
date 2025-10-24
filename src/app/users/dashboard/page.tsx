@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
+ import WhatsAppButton from "@/app/components/waButton/page";
+
 // import Image from "next/image";
 import dynamic from "next/dynamic";
 // const PackageList = dynamic(() => import("@/app/users/packages/page"), { ssr: false });
@@ -84,6 +86,7 @@ export default function UserDashboard() {
    
 <WhyChooseUs />
 <PackageList />
+<WhatsAppButton />
 
     </>
   );

@@ -7,7 +7,7 @@ import { hkGrotesk } from "@/app/fonts/fonts";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Link from "next/link";
-
+import WhatsAppButton from "@/app/components/waButton/page";
 import Loading from "@/app/components/loading/index"; // Spinner
 
 interface RegisterForm {
@@ -221,6 +221,7 @@ export default function RegisterPage() {
           </p>
         </form>
       </div>
+      <WhatsAppButton />
     </div>
   );
 }

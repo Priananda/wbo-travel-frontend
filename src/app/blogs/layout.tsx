@@ -6,6 +6,7 @@ import Navbar from "@/app/components/navbar";
 import { Search } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 
 type Blog = {
   id: number;
@@ -43,7 +44,9 @@ export default function BlogLayout({ children }: { children: ReactNode }) {
   };
 
   return (
+    
     <div className="relative min-h-screen bg-gray-50">
+             <ProtectedRoute allowedRoles={["user"]}>
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar />
       </div>
@@ -115,6 +118,7 @@ export default function BlogLayout({ children }: { children: ReactNode }) {
 
         </div>
       </div>
+      </ProtectedRoute>
     </div>
   );
 }

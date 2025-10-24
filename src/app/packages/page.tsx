@@ -10,6 +10,7 @@ import FavoriteButton from "@/app/components/FavoriteButton";
 import Navbar from "@/app/components/navbar";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import Loading from "@/app/components/loading/index"; // ✅ pakai component Loading
+ import WhatsAppButton from "@/app/components/waButton/page";
 
 interface PaketTour {
   id: number;
@@ -221,6 +222,7 @@ export default function PaketTourPage() {
           </button>
         )}
       </div>
+      <WhatsAppButton />
     </div>
   );
 }
