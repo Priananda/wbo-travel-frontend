@@ -11,6 +11,8 @@ import "aos/dist/aos.css";
 import Loading from "@/app/components/loading/index";
 import Link from "next/link";
 import WhatsAppButton from "@/app/components/waButton/page";
+import { useSearchParams } from "next/navigation";
+import AuthButton from "@/app/components/authButton/page";
 
 export default function UserLoginPage() {
   const { login, setUser } = useAuth();
@@ -20,6 +22,8 @@ export default function UserLoginPage() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [touched, setTouched] = useState({ email: false, password: false });
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/users/dashboard";
 
   useEffect(() => {
     AOS.init({ duration: 600, once: true });
@@ -77,7 +81,8 @@ export default function UserLoginPage() {
 
     try {
       await login(form.email, form.password);
-      setTimeout(() => router.push("/users/dashboard"), 800);
+      // setTimeout(() => router.push("/users/dashboard"), 800);
+      setTimeout(() => router.push(redirectUrl), 800);
     } catch (error) {
       console.error("Login gagal:", error);
       setErrors((prev) => ({
@@ -102,7 +107,8 @@ export default function UserLoginPage() {
       localStorage.setItem("token", res.data.token);
       setUser(res.data.user);
 
-      setTimeout(() => router.push("/users/dashboard"), 800);
+      // setTimeout(() => router.push("/users/dashboard"), 800);
+       setTimeout(() => router.push(redirectUrl), 800);
     } catch (err) {
       console.error("Login Google gagal:", err);
       setIsLoadingUsers(false);
@@ -110,7 +116,7 @@ export default function UserLoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="relative min-h-screen flex items-center justify-center bg-gray-100 px-2 md:-px-0 lg:px-0">
       {/* Overlay dan Spinner */}
       {isLoadingUsers && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black opacity-60">
@@ -163,7 +169,7 @@ export default function UserLoginPage() {
             value={form.password}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={`w-full mb-1 mt-2 px-4 py-2 border rounded-md outline-none placeholder:text-gray-500 ${
+            className={`w-full mb-3 mt-2 px-4 py-2 border rounded-md outline-none placeholder:text-gray-500 ${
               touched.password && errors.password
                 ? "border-red-500"
                 : "border-gray-300 focus:ring-1 focus:ring-cyan-700"
@@ -174,13 +180,18 @@ export default function UserLoginPage() {
           )}
 
           {/* Tombol */}
-          <button
+          {/* <button
             type="submit"
             className="mt-5 w-full text-md text-white py-2 rounded-md shadow-md transition font-semibold bg-gradient-to-r from-teal-600 to-cyan-700 hover:from-teal-800 hover:to-cyan-600 cursor-pointer"
             disabled={isLoadingUsers}
           >
             {isLoadingUsers ? "Menunggu..." : "Masuk"}
-          </button>
+          </button> */}
+          <AuthButton
+          text="Masuk"
+          type="submit"
+          isLoading={isLoadingUsers}
+          />
 
           <p className="text-sm text-black text-center mt-3">
             Belum punya akun?{" "}

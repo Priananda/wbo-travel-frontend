@@ -9,6 +9,7 @@ import { useAuth } from "@/app/services/Auth";
 import { motion, AnimatePresence } from "framer-motion";
 import LogoWBO from "@/app/assets/images/logo-wbo.png";
 import Loading from "@/app/components/loading/index";
+import TopBarContact from "@/app/components/topBarContact/page";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -83,86 +84,7 @@ export default function Navbar() {
       )}
 
       {/* Top Bar */}
-      <div
-        className={`hidden lg:block fixed left-1/2 -translate-x-1/2 z-50 w-[96%] rounded-full overflow-hidden transition-all duration-500 shadow-md ${
-          scrolled
-            ? "top-0 opacity-0 -translate-y-10 pointer-events-none"
-            : "top-[10px] opacity-100 translate-y-0"
-        }`}
-      >
-        <div className="py-2 px-6 bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-[15px] font-medium flex items-center justify-between">
-         <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-3 text-gray-800">
-  {/* Email */}
-  <Link 
-      href="mailto:idbalisundaram@gmail.com?subject=Halo&body=Halo,%20ada%20yang%20bisa%20kami%20bantu?" 
-      className="flex items-center space-x-2 hover:text-slate-200 text-white transition-colors"
-  >
-    <span>📧</span>
-    <span>idbalisundaram@gmail.com</span>
-  </Link>
-
-  {/* Phone */}
-  <Link
-      href="https://wa.me/6285333775517?text=Halo,%20ada%20yang%20bisa%20kami%20bantu?" 
-      className="flex items-center space-x-2 hover:text-slate-200 text-white transition-colors"
-  >
-    <span>📞</span>
-    <span>+62 853-3377-5517</span>
-  </Link>
-
-  {/* Address */}
-  <Link 
-    href="https://www.google.com/maps/place/PT.+Bali+Sundaram+Travel/@-8.6286973,115.2422507,2760m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2dd23f70b5a75011:0x4661f47875fd033f!8m2!3d-8.628719!4d115.2607048!16s%2Fg%2F11tg2p8bs6?entry=ttu&g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="flex items-center space-x-2 hover:text-slate-200 text-white transition-colors"
-  >
-    <span>📍</span>
-    <span>JL. Pudak No 3A Batubulan, Kec. Sukawati, Gianyar</span>
-  </Link>
-</div>
-
-
-          <div className="flex items-center space-x-4">
-  {/* Facebook */}
-  <Link 
-    href="https://www.facebook.com/groups/travelagent.indonesia/posts/2742958632557148/" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="hover:opacity-80"
-  >
-    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H8v-3h2.4V9.5a3.4 3.4 0 0 1 3.7-3.8 15.1 15.1 0 0 1 2.2.2v2.5h-1.2c-1.2 0-1.5.8-1.5 1.5V12H18l-.5 3h-3v7A10 10 0 0 0 22 12z" />
-    </svg>
-  </Link>
-
-  {/* Instagram */}
-  <Link 
-    href="https://www.instagram.com/wisatabalioke/" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="hover:opacity-80"
-  >
-    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 2a3 3 0 1 1-3 3 3 3 0 0 1 3-3zm4.5-2.75a1.25 1.25 0 1 0 1.25 1.25A1.25 1.25 0 0 0 16.5 6.25z" />
-    </svg>
-  </Link>
-
-  {/* TikTok */}
-  <Link 
-    href="https://www.tiktok.com/@wisatabalioke" 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="hover:opacity-80"
-  >
-    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12.3 2h3a5.3 5.3 0 0 0 5.2 5.2v3A8.3 8.3 0 0 1 13.2 7v7.1a5 5 0 1 1-5-5v3a2 2 0 1 0 2 2V2z" />
-    </svg>
-  </Link>
-</div>
-
-        </div>
-      </div>
+      <TopBarContact scrolled={scrolled} />
 
       {/* Main Navbar */}
       <header
@@ -205,7 +127,7 @@ export default function Navbar() {
                 </span>
                 <button
                   onClick={handleLogoutClick}
-                  className={`hidden cursor-pointer lg:block px-5 py-2 bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600 font-medium ${hkGrotesk.className}`}
+                  className={`hidden lg:block px-5 py-2 bg-cyan-700 text-white rounded-lg shadow-sm hover:bg-cyan-800 font-medium ${hkGrotesk.className}`}
                 >
                   Logout
                 </button>
@@ -213,7 +135,7 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={handleLoginClick}
-                className={`hidden lg:block px-5 py-2 bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600 font-medium ${hkGrotesk.className}`}
+                className={`hidden lg:block px-5 py-2 bg-cyan-700 text-white rounded-lg shadow-sm hover:bg-cyan-800 font-medium ${hkGrotesk.className}`}
               >
                 Login
               </button>
@@ -285,7 +207,7 @@ export default function Navbar() {
                       setMenuSidebar(false);
                       handleLogoutClick();
                     }}
-                    className="mt-6 w-full px-4 py-2 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600"
+                       className="mt-6 w-full px-4 py-2 bg-cyan-700 hover:bg-cyan-800 text-white rounded-lg shadow-sm"
                   >
                     Logout
                   </button>
@@ -295,7 +217,7 @@ export default function Navbar() {
                       setMenuSidebar(false);
                       handleLoginClick();
                     }}
-                    className="mt-6 w-full px-4 py-2 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600"
+                    className="mt-6 w-full px-4 py-2 bg-cyan-700 hover:bg-cyan-800 text-white rounded-lg shadow-sm"
                   >
                     Login
                   </button>

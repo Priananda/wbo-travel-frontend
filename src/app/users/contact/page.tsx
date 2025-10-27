@@ -6,8 +6,11 @@ import "aos/dist/aos.css";
 import Navbar from "@/app/components/navbar/index";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { hkGrotesk, LaBelleAurore } from "@/app/fonts/fonts";
- import Link from "next/link";
- import WhatsAppButton from "@/app/components/waButton/page";
+import Link from "next/link";
+import WhatsAppButton from "@/app/components/waButton/page";
+import Footer from "@/app/components/footer";
+
+
 export default function ContactPage() {
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
@@ -73,7 +76,7 @@ export default function ContactPage() {
                 Store Location
               </h3>
               <Link
-                href="https://www.google.com/maps?q=PT.+Bali+Sundaram+Travel,+JL.+Pudak+No+3A+Batubulan,+Gianyar"
+                href="https://maps.app.goo.gl/UuxM9DRKkz91c5Ry9"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`text-gray-800 text-md font-medium hover:text-teal-600 ${hkGrotesk.className}`}
@@ -99,7 +102,7 @@ export default function ContactPage() {
            
 
 <Link
-  href="https://wa.me/6281338905757?text=Halo,%20ada%20yang%20bisa%20kami%20bantu?"
+     href="https://wa.me/6281338905757?text=Halo%20Bali%20Sundaram%20Travel"
   target="_blank"
   rel="noopener noreferrer"
   className={`text-gray-800 text-md font-medium hover:text-teal-600 block ${hkGrotesk.className}`}
@@ -108,7 +111,7 @@ export default function ContactPage() {
 </Link>
 
 <Link
-  href="https://wa.me/6285333775517?text=Halo,%20ada%20yang%20bisa%20kami%20bantu?"
+      href="https://wa.me/6285333775517?text=Halo%20Wisata%20Bali%20Oke"
   target="_blank"
   rel="noopener noreferrer"
   className={`text-gray-800 text-md font-medium hover:text-teal-600 block ${hkGrotesk.className}`}
@@ -143,6 +146,7 @@ export default function ContactPage() {
         </div>
       </div>
         <WhatsAppButton />
+        <Footer />
     </div>
   );
 }

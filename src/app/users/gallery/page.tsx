@@ -5,8 +5,8 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
- import WhatsAppButton from "@/app/components/waButton/page";
-
+import WhatsAppButton from "@/app/components/waButton/page";
+import Footer from "@/app/components/footer"
 import {
   ArrowLeft,
   ArrowRight,
@@ -373,6 +373,7 @@ export default function GalleryPage() {
           </div>
         )}
          <WhatsAppButton />
+         <Footer/>
       </div>
     // </ProtectedRoute>
   );

@@ -59,7 +59,10 @@ export default function AddToCart({
 
   const handleAddToCart = async () => {
     if (!token) {
-      router.push("/auth/users/login");
+      // router.push("/auth/users/login");
+      // router.push(`/auth/users/login?redirect=/cart`);
+      router.push(`/auth/users/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+
       return;
     }
 
@@ -135,7 +138,7 @@ export default function AddToCart({
         </button>
       </div> */}
 
-      <div className="fixed md:absolute top-36 right-6  md:-top-70 md:-right-7 lg:-top-80 lg:-right-8  z-50 md:z-0">
+  <div className="fixed md:absolute top-36 right-6  md:-top-70 md:-right-7 lg:-top-80 lg:-right-8  z-50 md:z-0">
   <button
     onClick={() => setIsCartOpen(!isCartOpen)}
     className="relative p-3 bg-white rounded-full shadow-md hover:bg-gray-100 transition"

@@ -1,9 +1,9 @@
-// app/admin/layout.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import Sidebar from "@/app/components/admin/sidebar";
 import Header from "@/app/components/admin/header";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,13 +22,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [isMobile]);
 
   return (
-    <div className="flex">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    <div className="flex relative  overflow-y-hidden">
+      {/* ✅ Animasi Sidebar */}
+      <AnimatePresence initial={false}>
+        {sidebarOpen && (
+          <motion.div
+            key="sidebar"
+            initial={{ x: -260, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -260, opacity: 0 }}
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed lg:static z-40"
+          >
+            <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div
-        className={`flex-1 min-h-screen bg-gray-50 transition-all ${
-          !isMobile && sidebarOpen ? "ml-60" : "ml-0"
-        }`}
+      {/* ✅ Konten utama dengan transisi halus */}
+      <motion.div
+        layout
+        transition={{ type: "spring", stiffness: 120, damping: 15 }}
+        className={`flex-1 min-h-screen bg-gray-50`}
+        style={{
+          marginLeft: !isMobile && sidebarOpen ? 240 : 0,
+        }}
       >
         <Header
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
@@ -36,8 +54,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           onToggleDarkMode={() => {}}
         />
 
-        <main className="p-3">{children}</main>
-      </div>
+        <main className="p-3 transition-all duration-300 ease-in-out">
+          {children}
+        </main>
+      </motion.div>
     </div>
   );
 }

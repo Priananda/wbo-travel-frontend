@@ -14,8 +14,9 @@ import { hkGrotesk } from "@/app/fonts/fonts";
 import { LaBelleAurore } from "@/app/fonts/fonts";
 import AOS from "aos";
 import "aos/dist/aos.css";
- import WhatsAppButton from "@/app/components/waButton/page";
-
+import WhatsAppButton from "@/app/components/waButton/page";
+import Footer from "@/app/components/footer";
+import ContactUsButton from "@/app/components/contactUsButton/page";
 export default function HomePage() {
   const [count, setCount] = useState(0);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
@@ -116,8 +117,8 @@ export default function HomePage() {
   return (
     <>
       {/* ====================== SECTION ABOUT ====================== */}
-      <section
-        ref={ref}
+      <section>
+      <div        ref={ref}
         className="w-full mt-20 md:mt-20 lg:mt-20 mb-10 bg-white relative overflow-hidden"
       >
         <div className="absolute top-0 left-0 w-full z-50">
@@ -125,7 +126,7 @@ export default function HomePage() {
         </div>
 
         {/* Judul */}
-        <div className="container mx-auto space-y-4 px-6 md:px-0 lg:px-12 mt-20 text-left">
+        <div className="container mx-auto space-y-4 px-4 md:px-0 lg:px-12 mt-20 text-left">
           <Image
             src={compas}
             alt="Compass Icon"
@@ -147,7 +148,7 @@ export default function HomePage() {
 
         {/* GRID KONTEN */}
         <div
-          className={`container mx-auto px-6 md:px-0 lg:px-12 grid md:grid-cols-2 gap-20 items-center font-medium ${hkGrotesk.className}`}
+          className={`container mx-auto px-4 md:px-0 lg:px-12 grid md:grid-cols-2 gap-20 items-center font-medium ${hkGrotesk.className}`}
         >
           {/* Kolom Kiri */}
           <motion.div
@@ -204,7 +205,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <button
+            {/* <button
   onClick={() =>
     window.open(
       "https://wa.me/6281338905757?text=Halo%20Bali%20Sundaram%20Travel!%20Ada%20yang%20bisa%20kami%20bantu?",
@@ -214,7 +215,8 @@ export default function HomePage() {
   className="bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm text-white font-semibold px-6 py-3 cursor-pointer transition-all"
 >
   Contact Us
-</button>
+</button> */}
+<ContactUsButton />
 
           </motion.div>
 
@@ -254,10 +256,10 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </div>
 
       {/* ====================== SECTION 3 LANGKAH ====================== */}
-      <section className="w-full py-20 bg-white text-center">
+      <section className="w-full bg-white text-center">
         {/* Subtitle */}
         <p
           className={`text-teal-600 text-2xl mb-2 ${LaBelleAurore.className}`}
@@ -273,7 +275,7 @@ export default function HomePage() {
         </h2>
 
         {/* Cards (pakai AOS) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-7">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto px-4 md:px-7 lg:px-7">
           {steps.map((step, i) => (
             <div
               key={i}
@@ -287,7 +289,7 @@ export default function HomePage() {
                 {step.icon}
               </div>
 
-              <h3 className="font-semibold text-xl mb-5 bg-gradient-to-r from-teal-500 to-cyan-700 bg-clip-text text-transparent">
+              <h3 className="font-semibold text-xl mb-5 text-teal-700">
                 {step.title}
               </h3>
 
@@ -298,6 +300,9 @@ export default function HomePage() {
           ))}
         </div>
          <WhatsAppButton />
+      
+      </section>
+         <Footer/>
       </section>
     </>
   );

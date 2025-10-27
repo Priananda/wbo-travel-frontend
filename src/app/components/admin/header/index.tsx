@@ -72,7 +72,7 @@ export default function Header({ onToggleSidebar, isDarkMode, onToggleDarkMode }
 
   return (
     <header className="w-full bg-white border-b border-slate-200 z-40">
-      <div className="max-w-7xl mx-auto px-4  ">
+      <div className="max-w-7xl mx-auto px-7  ">
         <div className="flex items-center justify-between h-16">
           {/* Hamburger */}
           <div className="flex items-center">
@@ -86,7 +86,7 @@ export default function Header({ onToggleSidebar, isDarkMode, onToggleDarkMode }
 
           {/* Right: darkmode + user */}
           <div className="flex items-center space-x-4">
-            <button
+            {/* <button
               onClick={onToggleDarkMode}
               className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
             >
@@ -95,12 +95,12 @@ export default function Header({ onToggleSidebar, isDarkMode, onToggleDarkMode }
               ) : (
                 <Moon size={20} className="text-gray-700 dark:text-gray-200" />
               )}
-            </button>
+            </button> */}
 
-            <button className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative">
+            {/* <button className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative">
               <Bell size={20} className="text-gray-700 dark:text-gray-200" />
               <span className="absolute top-1 right-1 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+            </button> */}
 
             {/* Profile */}
             <div
@@ -123,7 +123,7 @@ export default function Header({ onToggleSidebar, isDarkMode, onToggleDarkMode }
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600" />
                   )}
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                  <span className="text-sm font-medium text-black dark:text-gray-200">
                     {me.name}
                   </span>
 

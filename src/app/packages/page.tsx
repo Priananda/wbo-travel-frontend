@@ -11,6 +11,7 @@ import Navbar from "@/app/components/navbar";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import Loading from "@/app/components/loading/index"; // ✅ pakai component Loading
  import WhatsAppButton from "@/app/components/waButton/page";
+import Footer from "@/app/components/footer/index";
 
 interface PaketTour {
   id: number;
@@ -73,6 +74,7 @@ export default function PaketTourPage() {
   // if (loading) return <Loading />; // ✅ pakai component Loading
 
   return (
+    <div className="">
     <div className="px-3 md:px-3 lg:px-0 max-w-6xl mx-auto py-10 relative">
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar />
@@ -223,6 +225,9 @@ export default function PaketTourPage() {
         )}
       </div>
       <WhatsAppButton />
+     
+    </div>
+     <Footer />
     </div>
   );
 }

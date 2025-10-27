@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import FavoriteButton from "@/app/components/FavoriteButton";
+import ExploreButton from "@/app/components/exploreButton/page";
 
 interface PaketTour {
   id: number;
@@ -70,7 +70,7 @@ export default function PaketCard({ paket }: PaketCardProps) {
         </h3>
 
         {/* Harga + Tombol */}
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <p className="font-bold text-gray-900 text-lg drop-shadow-xs">
             Rp{Number(paket.price).toLocaleString("id-ID")}
           </p>
@@ -80,7 +80,14 @@ export default function PaketCard({ paket }: PaketCardProps) {
           >
             Explore
           </Link>
+        </div> */}
+        <div className="flex items-center justify-between">
+          <p className="font-bold text-gray-900 text-lg drop-shadow-xs">
+            Rp{Number(paket.price).toLocaleString("id-ID")}
+          </p>
+          <ExploreButton href={`/packages/${paket.slug}`} />
         </div>
+
       </div>
     </div>
   );

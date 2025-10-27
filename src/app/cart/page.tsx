@@ -86,7 +86,7 @@ export default function CartPage() {
   if (loading) return <Loading />;
 
   return (
-    <div className="max-w-[94%] mx-auto p-6 relative">
+    <div className="max-w-[98%] md:max-w-[94%] lg:max-w-[94%]  mx-auto p-3 md:p-6 lg:p-6 relative">
       {/* Navbar */}
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar />
@@ -106,8 +106,8 @@ export default function CartPage() {
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Tabel Cart */}
-          <div className="flex-1 p-3 bg-white shadow-md rounded-lg border-2 border-slate-200 overflow-hidden">
-            <table className="w-full text-left">
+          <div className="flex-1 p-3 bg-white shadow-md rounded-lg border-2 border-slate-200 overflow-x-auto scroll-hidden ">
+            <table className="w-full text-left ">
               <thead className="bg-cyan-700/10">
                 <tr>
                   <th className="py-3 px-4 font-semibold text-black">Produk</th>
@@ -201,6 +201,9 @@ export default function CartPage() {
     </div>
   );
 }
+
+
+
 
 
 // "use client";

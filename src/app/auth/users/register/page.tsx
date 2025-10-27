@@ -9,6 +9,7 @@ import "aos/dist/aos.css";
 import Link from "next/link";
 import WhatsAppButton from "@/app/components/waButton/page";
 import Loading from "@/app/components/loading/index"; // Spinner
+import AuthButton from "@/app/components/authButton/page";
 
 interface RegisterForm {
   name: string;
@@ -114,7 +115,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="relative min-h-screen flex items-center justify-center bg-gray-100 px-2 md:-px-0 lg:px-0">
       {isLoading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black opacity-60">
           <Loading />
@@ -201,13 +202,19 @@ export default function RegisterPage() {
           </div>
 
           {/* Tombol Submit */}
-          <button
+          {/* <button
             type="submit"
             disabled={isLoading}
             className="mt-5 w-full text-md text-white py-2 rounded-md transition font-semibold bg-gradient-to-r from-teal-600 to-cyan-700 hover:from-teal-800 hover:to-cyan-600 shadow-md cursor-pointer"
           >
             {isLoading ? "Menunggu..." : "Daftar"}
-          </button>
+          </button> */}
+          <AuthButton
+            text="Daftar"
+            type="submit"
+            isLoading={isLoading}
+          />
+
 
           <p className="text-sm text-black text-center mt-3">
             Sudah punya akun?{" "}

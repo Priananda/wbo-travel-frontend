@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* Hilangkan scrollbar */
+.scroll-hidden {
+     scrollbar-width: none;
+     -ms-overflow-style: none;
+}
+
+.scroll-hidden::-webkit-scrollbar {
+     display: none;
+}
+
 /* animasi likePackages */
 @layer utilities {
      @keyframes fadeInOut {

@@ -21,8 +21,8 @@ export default function WhatsAppButton() {
         <Image
           src={whatsappIcon}
           alt="WhatsApp"
-          width={65}
-          height={60}
+          width={55}
+          height={55}
           priority
         />
       </div>

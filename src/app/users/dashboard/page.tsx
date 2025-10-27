@@ -2,8 +2,9 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Link from "next/link";
- import WhatsAppButton from "@/app/components/waButton/page";
+import WhatsAppButton from "@/app/components/waButton/page";
+import Footer from "@/app/components/footer/index";
+import ExploreDestinationsButton from "@/app/components/exploreDestinationsButton/page";
 
 // import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -59,11 +60,17 @@ export default function UserDashboard() {
             Powered by PT Bali Sundaram Travel
           </p>
 
-          <Link
+          {/* <Link
            href="/packages"
           className={`px-6 py-3 text-lg bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg hover:from-teal-800 hover:to-cyan-600 transition duration-300 transform hover:scale-110 font-semibold ${hkGrotesk.className}`}>
           Explore Destinations
-          </Link>
+          </Link> */}
+
+          <ExploreDestinationsButton
+            href="/packages"
+            label="Explore Destinations"
+            className={hkGrotesk.className}
+          />
           
           
         </div>
@@ -87,6 +94,7 @@ export default function UserDashboard() {
 <WhyChooseUs />
 <PackageList />
 <WhatsAppButton />
+<Footer />
 
     </>
   );

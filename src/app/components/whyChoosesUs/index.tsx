@@ -30,9 +30,9 @@ export default function WhyChooseUs() {
 
   useEffect(() => {
     AOS.init({
-      duration: 800, // durasi animasi
-      easing: "ease-in-out", // gaya animasi
-      once: true, // animasi hanya sekali saat scroll
+      duration: 800, 
+      easing: "ease-in-out", 
+      once: true, 
     });
   }, []);
 
@@ -41,7 +41,7 @@ export default function WhyChooseUs() {
       <div className="max-w-6xl mx-auto text-center">
         <div className="flex flex-col items-center justify-center mb-6 md:flex-row">
           {/* Garis gradient */}
-          <div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full mb-3 md:mb-0 md:mr-4"></div>
+          <div className="w-20 h-1 bg-cyan-700 rounded-full mb-3 md:mb-0 md:mr-4"></div>
 
           {/* Judul */}
           <h2
@@ -59,7 +59,7 @@ export default function WhyChooseUs() {
   {items.map((item, index) => (
     <div
       key={index}
-      className="relative rounded-lg p-[2px] bg-gradient-to-r from-teal-600 to-cyan-600"
+      className="relative rounded-lg p-[2px] bg-cyan-600"
       data-aos="fade-up"
       data-aos-delay={index * 200} // setiap card muncul selang 200ms
     >
