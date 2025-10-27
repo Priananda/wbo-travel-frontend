@@ -37,7 +37,7 @@ export default function RegisterPage() {
     AOS.init({ duration: 600, once: true });
   }, []);
 
-  // ✅ Validasi tiap field
+  // Validasi tiap field
   const validateField = (name: keyof RegisterForm, value: string) => {
     let message = "";
 
@@ -60,7 +60,7 @@ export default function RegisterPage() {
     setErrors((prev) => ({ ...prev, [name]: message }));
   };
 
-  // ✅ Saat input berubah
+  // Saat input berubah
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target as {
       name: keyof RegisterForm;
@@ -70,7 +70,7 @@ export default function RegisterPage() {
     if (touched[name]) validateField(name, value); // validasi real-time hanya jika sudah disentuh
   };
 
-  // ✅ Saat input disentuh (blur)
+  // Saat input disentuh (blur)
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target as {
       name: keyof RegisterForm;
@@ -80,7 +80,7 @@ export default function RegisterPage() {
     validateField(name, value);
   };
 
-  // ✅ Saat submit form
+  // Saat submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

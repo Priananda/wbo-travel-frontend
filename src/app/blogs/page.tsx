@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Calendar, Folder, User, MessageCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { api } from "@/app/api/api";
 
 type Blog = {
   id: number;
@@ -26,7 +27,8 @@ export default function BlogListPage() {
   const searchTerm = searchParams.get("search")?.toLowerCase() || "";
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/blogs").then(async (res) => {
+    // axios.get("http://127.0.0.1:8000/api/blogs").then(async (res) => {
+    api.get("/blogs").then(async (res) => {
       const data = res.data.data;
       setBlogs(data);
 
@@ -43,7 +45,8 @@ export default function BlogListPage() {
       // Ambil komentar per blog
       const counts: Record<number, number> = {};
       for (const blog of data) {
-        const commentsRes = await axios.get(`http://127.0.0.1:8000/api/blogs/${blog.id}/comments`);
+        // const commentsRes = await axios.get(`http://127.0.0.1:8000/api/blogs/${blog.id}/comments`);
+        const commentsRes = await api.get(`/blogs/${blog.id}/comments`);
         counts[blog.id] = commentsRes.data.data?.length || 0;
       }
       setCommentsCount(counts);

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { FileText, MessageCircle } from "lucide-react";
 import WhatsAppButton from "@/app/components/waButton/page";
 import Footer from "@/app/components/footer";
+import { api } from "@/app/api/api";
 
 type Blog = {
   id: number;
@@ -29,12 +30,12 @@ export default function BlogLayout({ children }: { children: ReactNode }) {
   const [recentComments, setRecentComments] = useState<Comment[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/blogs").then((res) => {
+    useEffect(() => {
+    api.get("/blogs").then((res) => {
       setRecentPosts(res.data.data.slice(0, 5));
     });
 
-    axios.get("http://127.0.0.1:8000/api/comments?limit=5").then((res) => {
+    api.get("/comments?limit=5").then((res) => {
       setRecentComments(res.data.data);
     });
   }, []);

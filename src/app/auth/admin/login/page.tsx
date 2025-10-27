@@ -26,7 +26,7 @@ export default function LoginPage() {
     AOS.init({ duration: 600, once: true });
   }, []);
 
-  // 🧠 Validasi field tertentu
+  // Validasi field tertentu
   const validateField = (name: string, value: string) => {
     let message = "";
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
     setErrors((prev) => ({ ...prev, [name]: message }));
   };
 
-  // ✏️ Saat mengetik
+  // Saat mengetik
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -56,14 +56,14 @@ export default function LoginPage() {
     }
   };
 
-  // 🖱️ Saat input pertama kali disentuh
+  // Saat input pertama kali disentuh
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
     validateField(name, value);
   };
 
-  // 🚀 Saat submit form
+  // Saat submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorAuth("");

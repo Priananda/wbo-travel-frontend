@@ -7,6 +7,7 @@ import { useAuth } from "@/app/services/Auth";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { adminApi } from "@/app/api/api";
 
 interface Blog {
   id: number;
@@ -28,36 +29,57 @@ export default function ViewBlogPage() {
   const [newImage, setNewImage] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const apiUrl = "http://127.0.0.1:8000/api/admin/blogs";
+  // const apiUrl = "http://127.0.0.1:8000/api/admin/blogs";
 
-  // 🔹 Ambil semua blog
+  // // Ambil semua blog
+  // const fetchBlogs = async () => {
+  //   if (!token) return;
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.get(apiUrl, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     setBlogs(res.data.data || res.data);
+  //   } catch (err) {
+  //     console.error("Gagal ambil data:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const fetchBlogs = async () => {
-    if (!token) return;
-    setLoading(true);
-    try {
-      const res = await axios.get(apiUrl, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setBlogs(res.data.data || res.data);
-    } catch (err) {
-      console.error("Gagal ambil data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const res = await adminApi.get("blogs");
+    setBlogs(res.data.data || res.data);
+  } catch (err) {
+    console.error("Gagal ambil data:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // 🔹 Ambil 1 blog untuk diedit
+  // const handleEdit = async (id: number) => {
+  //   if (!token) return;
+  //   try {
+  //     const res = await axios.get(`${apiUrl}/${id}`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     setEditBlog(res.data.data || res.data);
+  //   } catch (err) {
+  //     console.error("Gagal ambil detail blog:", err);
+  //   }
+  // };
   const handleEdit = async (id: number) => {
-    if (!token) return;
-    try {
-      const res = await axios.get(`${apiUrl}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setEditBlog(res.data.data || res.data);
-    } catch (err) {
-      console.error("Gagal ambil detail blog:", err);
-    }
-  };
+  try {
+    const res = await adminApi.get(`blogs/${id}`);
+    setEditBlog(res.data.data || res.data);
+  } catch (err) {
+    console.error("Gagal ambil detail blog:", err);
+  }
+};
+
 
   // 🔹 Handle perubahan input
   const handleEditChange = (
@@ -88,11 +110,16 @@ export default function ViewBlogPage() {
       formData.append("content", editBlog.content || "");
       if (newImage) formData.append("image", newImage);
 
-      await axios.post(`${apiUrl}/${editBlog.id}?_method=PUT`, formData, {
+      // await axios.post(`${apiUrl}/${editBlog.id}?_method=PUT`, formData, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+      await adminApi.post(`blogs/${editBlog.id}?_method=PUT`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+        "Content-Type": "multipart/form-data",
+          },
       });
 
       alert("Perubahan berhasil disimpan!");
@@ -112,9 +139,11 @@ export default function ViewBlogPage() {
     if (!confirm("Yakin ingin menghapus blog ini?")) return;
     if (!token) return;
     try {
-      await axios.delete(`${apiUrl}/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // await axios.delete(`${apiUrl}/${id}`, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+      await adminApi.delete(`blogs/${id}`);
+      
       fetchBlogs();
     } catch (err) {
       console.error("Gagal hapus:", err);

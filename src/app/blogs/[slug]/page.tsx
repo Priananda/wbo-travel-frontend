@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Calendar, Folder, User, MessageCircle } from "lucide-react";
 import { useAuth } from "@/app/services/Auth";
 import { blogTypoContent } from "@/app/utils/blogTypo";
+import { api, userApi } from "@/app/api/api"; // 
 
 type Blog = {
   id: number;
@@ -27,7 +27,7 @@ type Comment = {
 };
 
 export default function BlogDetailPage() {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const { slug } = useParams();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -35,188 +35,412 @@ export default function BlogDetailPage() {
   const [prevBlog, setPrevBlog] = useState<Blog | null>(null);
   const [nextBlog, setNextBlog] = useState<Blog | null>(null);
 
-  // 🔹 Ambil data blog berdasarkan slug
+  // Ambil blog berdasarkan slug
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/api/blogs/slug/${slug}`).then(async (res) => {
+    api.get(`/blogs/slug/${slug}`).then(async (res) => {
       const currentBlog = res.data.data;
       setBlog(currentBlog);
 
-      // Setelah blog ditemukan, cari prev dan next berdasarkan ID
-      const allBlogsRes = await axios.get("http://127.0.0.1:8000/api/blogs");
+      // Cari prev dan next
+      const allBlogsRes = await api.get("/blogs");
       const blogs: Blog[] = allBlogsRes.data.data || [];
-
       const currentIndex = blogs.findIndex((b) => b.id === currentBlog.id);
+
       setPrevBlog(currentIndex > 0 ? blogs[currentIndex - 1] : null);
-      setNextBlog(currentIndex < blogs.length - 1 ? blogs[currentIndex + 1] : null);
+      setNextBlog(
+        currentIndex < blogs.length - 1 ? blogs[currentIndex + 1] : null
+      );
     });
   }, [slug]);
 
-  // 🔹 Ambil komentar
+  // Ambil komentar
   useEffect(() => {
     if (blog) {
-      axios
-        .get(`http://127.0.0.1:8000/api/blogs/${blog.id}/comments`)
-        .then((res) => setComments(res.data.data || []));
+      api.get(`/blogs/${blog.id}/comments`).then((res) => {
+        setComments(res.data.data || []);
+      });
     }
   }, [blog]);
 
-  // 🔹 Kirim komentar baru
+  // Kirim komentar baru
   const handleSubmit = async () => {
-    if (!user || !token) {
+    if (!user) {
       alert("Silakan login terlebih dahulu untuk berkomentar.");
       return;
     }
 
     if (!newComment.trim()) return;
 
-    await axios.post(
-      "http://127.0.0.1:8000/api/user/comments",
-      { blog_id: blog?.id, content: newComment },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    await userApi.post(`/comments`, {
+      blog_id: blog?.id,
+      content: newComment,
+    });
 
     setNewComment("");
-    const res = await axios.get(`http://127.0.0.1:8000/api/blogs/${blog?.id}/comments`);
+
+    const res = await api.get(`/blogs/${blog?.id}/comments`);
     setComments(res.data.data || []);
   };
 
   if (!blog) return <p className="text-center py-10">Loading...</p>;
 
-  // 🔹 Ambil isi typografi dari file blogTypo.ts
-  const htmlContent = blogTypoContent[blog.slug] || blogTypoContent.default;
+  const htmlContent =
+    blogTypoContent[blog.slug] || blogTypoContent.default;
 
   return (
     <div className="relative min-h-screen mb-5">
-    <div className="bg-white p-4 rounded-lg shadow border border-slate-200 transition">
-      {/* Gambar Header */}
-      {blog.image && (
-        <Image
-          src={`http://127.0.0.1:8000/storage/${blog.image}`}
-          alt={blog.title}
-          width={800}
-          height={400}
-          className="rounded-md object-cover w-full h-64 mb-7"
-          unoptimized
-        />
-      )}
+      <div className="bg-white p-4 rounded-lg shadow border border-slate-200 transition">
+        {blog.image && (
+          <Image
+            src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${blog.image}`}
+            alt={blog.title}
+            width={800}
+            height={400}
+            className="rounded-md object-cover w-full h-64 mb-7"
+            unoptimized
+          />
+        )}
 
-      {/* Judul dan Info */}
-      <h2 className="text-2xl font-bold mb-4 text-gray-900 hover:text-cyan-700">
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 hover:text-cyan-700">
           {blog.title}
-      </h2>
+        </h2>
 
-      <div className="text-gray-600 text-sm flex flex-wrap items-center gap-3 mb-4">
-        <Calendar className="text-red-500 w-4 h-4" />
-        {new Date(blog.published_at || "").toLocaleDateString("id-ID")}
-        <Folder className="text-red-500 w-4 h-4" />
-        {blog.category || "Uncategorized"}
-        <User className="text-red-500 w-4 h-4" />
-        {blog.author_email || "Admin"}
-        <MessageCircle className="text-red-500 w-4 h-4" />
-        {comments.length} Komentar
-      </div>
-
-      {/* 🔸 Render konten dari blogTypo.ts */}
-      <article
-        className="max-w-none text-gray-800 leading-relaxed mb-8"
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
-      />
-
-      {/* 🔁 Navigasi Previous / Next Selalu Ada */}
-      <div className="flex justify-between items-center border-y border-slate-400 py-6 my-6 text-gray-800">
-        {/* Previous */}
-        <div className="flex-1 text-left">
-          {prevBlog ? (
-            <Link
-              href={`/blogs/${prevBlog.slug}`}
-              className="group inline-block"
-            >
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="text-lg group-hover:-translate-x-1 transition-transform">&lt;</span>
-                <span>PREVIOUS</span>
-              </div>
-              <p className="font-semibold text-gray-800 group-hover:text-cyan-700 transition">
-                {prevBlog.title}
-              </p>
-            </Link>
-          ) : (
-            <div className="opacity-50">
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <span className="text-lg">&lt;</span>
-                <span>PREVIOUS</span>
-              </div>
-              <p className="font-semibold text-gray-400">Tidak ada posting sebelumnya</p>
-            </div>
-          )}
+        <div className="text-gray-600 text-sm flex flex-wrap items-center gap-3 mb-4">
+          <Calendar className="text-red-500 w-4 h-4" />
+          {new Date(blog.published_at || "").toLocaleDateString("id-ID")}
+          <Folder className="text-red-500 w-4 h-4" />
+          {blog.category || "Uncategorized"}
+          <User className="text-red-500 w-4 h-4" />
+          {blog.author_email || "Admin"}
+          <MessageCircle className="text-red-500 w-4 h-4" />
+          {comments.length} Komentar
         </div>
 
-        {/* Next */}
-        <div className="flex-1 text-right">
-          {nextBlog ? (
-            <Link
-              href={`/blogs/${nextBlog.slug}`}
-              className="group inline-block"
-            >
-              <div className="flex justify-end items-center gap-2 text-sm text-gray-500">
-                <span>NEXT</span>
-                <span className="text-lg group-hover:translate-x-1 transition-transform">&gt;</span>
-              </div>
-              <p className="font-semibold text-gray-800 group-hover:text-cyan-700 transition">
-                {nextBlog.title}
-              </p>
-            </Link>
-          ) : (
-            <div className="opacity-50 text-right">
-              <div className="flex justify-end items-center gap-2 text-sm text-gray-400">
-                <span>NEXT</span>
-                <span className="text-lg">&gt;</span>
-              </div>
-              <p className="font-semibold text-gray-400">Tidak ada posting selanjutnya</p>
-            </div>
-          )}
-        </div>
-      </div>
+        <article
+          className="max-w-none text-gray-800 leading-relaxed mb-8"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
 
-      {/* 💬 Komentar Section */}
-      <div className="mt-6  pt-4">
-        <h3 className="text-lg font-semibold mb-3 text-black">Komentar</h3>
-        {comments.length ? (
-          comments.map((c) => (
-            <div key={c.id} className="bg-gray-100 p-3 rounded-md text-sm mb-2">
-              <p className="font-medium text-gray-800">{c.user?.name}</p>
-              <p className="text-gray-700">{c.content}</p>
-              <p className="text-gray-400 text-xs">
-                {new Date(c.created_at).toLocaleString("id-ID")}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-sm">Belum ada komentar.</p>
-        )}
-
-        {user ? (
-          <div className="mt-4">
-            <textarea
-              className="w-full border border-slate-300 rounded-md p-2 h-20 text-sm"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Tulis komentar kamu..."
-            />
-            <button
-              onClick={handleSubmit}
-              className="mt-2 px-3 py-3 bg-cyan-700 text-white font-medium text-sm rounded-md hover:bg-cyan-800"
-            >
-              Kirim Komentar
-            </button>
+        {/* Navigasi */}
+        <div className="flex justify-between items-center border-y border-slate-400 py-6 my-6 text-gray-800">
+          <div className="flex-1 text-left">
+            {prevBlog ? (
+              <Link href={`/blogs/${prevBlog.slug}`} className="group inline-block">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span className="text-lg group-hover:-translate-x-1 transition-transform">
+                    &lt;
+                  </span>
+                  <span>PREVIOUS</span>
+                </div>
+                <p className="font-semibold text-gray-800 group-hover:text-cyan-700 transition">
+                  {prevBlog.title}
+                </p>
+              </Link>
+            ) : (
+              <div className="opacity-50">
+                <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <span className="text-lg">&lt;</span>
+                  <span>PREVIOUS</span>
+                </div>
+                <p className="font-semibold text-gray-400">
+                  Tidak ada posting sebelumnya
+                </p>
+              </div>
+            )}
           </div>
-        ) : (
-          <p className="text-gray-500 text-sm mt-2">Login untuk menulis komentar.</p>
-        )}
+
+          <div className="flex-1 text-right">
+            {nextBlog ? (
+              <Link href={`/blogs/${nextBlog.slug}`} className="group inline-block">
+                <div className="flex justify-end items-center gap-2 text-sm text-gray-500">
+                  <span>NEXT</span>
+                  <span className="text-lg group-hover:translate-x-1 transition-transform">
+                    &gt;
+                  </span>
+                </div>
+                <p className="font-semibold text-gray-800 group-hover:text-cyan-700 transition">
+                  {nextBlog.title}
+                </p>
+              </Link>
+            ) : (
+              <div className="opacity-50 text-right">
+                <div className="flex justify-end items-center gap-2 text-sm text-gray-400">
+                  <span>NEXT</span>
+                  <span className="text-lg">&gt;</span>
+                </div>
+                <p className="font-semibold text-gray-400">
+                  Tidak ada posting selanjutnya
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Komentar */}
+        <div className="mt-6 pt-4">
+          <h3 className="text-lg font-semibold mb-3 text-black">Komentar</h3>
+
+          {comments.length ? (
+            comments.map((c) => (
+              <div key={c.id} className="bg-gray-100 p-3 rounded-md text-sm mb-2">
+                <p className="font-medium text-gray-800">{c.user?.name}</p>
+                <p className="text-gray-700">{c.content}</p>
+                <p className="text-gray-400 text-xs">
+                  {new Date(c.created_at).toLocaleString("id-ID")}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm">Belum ada komentar.</p>
+          )}
+
+          {user ? (
+            <div className="mt-4">
+              <textarea
+                className="w-full border border-slate-300 focus:outline-none rounded-md p-2 h-20 text-sm"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Tulis komentar kamu..."
+              />
+              <button
+                onClick={handleSubmit}
+                className="mt-2 px-3 py-3 bg-cyan-700 text-white font-medium text-sm rounded-md hover:bg-cyan-800"
+              >
+                Kirim Komentar
+              </button>
+            </div>
+          ) : (
+            <p className="text-red-500 text-sm mt-2">
+              Silahkan login untuk menulis komentar.
+            </p>
+          )}
+        </div>
       </div>
-    </div>
     </div>
   );
 }
+
+
+
+// "use client";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import Image from "next/image";
+// import Link from "next/link";
+// import { useParams } from "next/navigation";
+// import { Calendar, Folder, User, MessageCircle } from "lucide-react";
+// import { useAuth } from "@/app/services/Auth";
+// import { blogTypoContent } from "@/app/utils/blogTypo";
+
+// type Blog = {
+//   id: number;
+//   title: string;
+//   slug: string;
+//   content: string;
+//   image?: string;
+//   category?: string;
+//   author_email?: string;
+//   published_at?: string;
+// };
+
+// type Comment = {
+//   id: number;
+//   content: string;
+//   user: { name: string };
+//   created_at: string;
+// };
+
+// export default function BlogDetailPage() {
+//   const { user, token } = useAuth();
+//   const { slug } = useParams();
+//   const [blog, setBlog] = useState<Blog | null>(null);
+//   const [comments, setComments] = useState<Comment[]>([]);
+//   const [newComment, setNewComment] = useState("");
+//   const [prevBlog, setPrevBlog] = useState<Blog | null>(null);
+//   const [nextBlog, setNextBlog] = useState<Blog | null>(null);
+
+//   // 🔹 Ambil data blog berdasarkan slug
+//   useEffect(() => {
+//     axios.get(`http://127.0.0.1:8000/api/blogs/slug/${slug}`).then(async (res) => {
+//       const currentBlog = res.data.data;
+//       setBlog(currentBlog);
+
+//       // Setelah blog ditemukan, cari prev dan next berdasarkan ID
+//       const allBlogsRes = await axios.get("http://127.0.0.1:8000/api/blogs");
+//       const blogs: Blog[] = allBlogsRes.data.data || [];
+
+//       const currentIndex = blogs.findIndex((b) => b.id === currentBlog.id);
+//       setPrevBlog(currentIndex > 0 ? blogs[currentIndex - 1] : null);
+//       setNextBlog(currentIndex < blogs.length - 1 ? blogs[currentIndex + 1] : null);
+//     });
+//   }, [slug]);
+
+//   // 🔹 Ambil komentar
+//   useEffect(() => {
+//     if (blog) {
+//       axios
+//         .get(`http://127.0.0.1:8000/api/blogs/${blog.id}/comments`)
+//         .then((res) => setComments(res.data.data || []));
+//     }
+//   }, [blog]);
+
+//   // 🔹 Kirim komentar baru
+//   const handleSubmit = async () => {
+//     if (!user || !token) {
+//       alert("Silakan login terlebih dahulu untuk berkomentar.");
+//       return;
+//     }
+
+//     if (!newComment.trim()) return;
+
+//     await axios.post(
+//       "http://127.0.0.1:8000/api/user/comments",
+//       { blog_id: blog?.id, content: newComment },
+//       { headers: { Authorization: `Bearer ${token}` } }
+//     );
+
+//     setNewComment("");
+//     const res = await axios.get(`http://127.0.0.1:8000/api/blogs/${blog?.id}/comments`);
+//     setComments(res.data.data || []);
+//   };
+
+//   if (!blog) return <p className="text-center py-10">Loading...</p>;
+
+//   // 🔹 Ambil isi typografi dari file blogTypo.ts
+//   const htmlContent = blogTypoContent[blog.slug] || blogTypoContent.default;
+
+//   return (
+//     <div className="relative min-h-screen mb-5">
+//     <div className="bg-white p-4 rounded-lg shadow border border-slate-200 transition">
+//       {/* Gambar Header */}
+//       {blog.image && (
+//         <Image
+//           src={`http://127.0.0.1:8000/storage/${blog.image}`}
+//           alt={blog.title}
+//           width={800}
+//           height={400}
+//           className="rounded-md object-cover w-full h-64 mb-7"
+//           unoptimized
+//         />
+//       )}
+
+//       {/* Judul dan Info */}
+//       <h2 className="text-2xl font-bold mb-4 text-gray-900 hover:text-cyan-700">
+//           {blog.title}
+//       </h2>
+
+//       <div className="text-gray-600 text-sm flex flex-wrap items-center gap-3 mb-4">
+//         <Calendar className="text-red-500 w-4 h-4" />
+//         {new Date(blog.published_at || "").toLocaleDateString("id-ID")}
+//         <Folder className="text-red-500 w-4 h-4" />
+//         {blog.category || "Uncategorized"}
+//         <User className="text-red-500 w-4 h-4" />
+//         {blog.author_email || "Admin"}
+//         <MessageCircle className="text-red-500 w-4 h-4" />
+//         {comments.length} Komentar
+//       </div>
+
+//       {/* 🔸 Render konten dari blogTypo.ts */}
+//       <article
+//         className="max-w-none text-gray-800 leading-relaxed mb-8"
+//         dangerouslySetInnerHTML={{ __html: htmlContent }}
+//       />
+
+//       {/* 🔁 Navigasi Previous / Next Selalu Ada */}
+//       <div className="flex justify-between items-center border-y border-slate-400 py-6 my-6 text-gray-800">
+//         {/* Previous */}
+//         <div className="flex-1 text-left">
+//           {prevBlog ? (
+//             <Link
+//               href={`/blogs/${prevBlog.slug}`}
+//               className="group inline-block"
+//             >
+//               <div className="flex items-center gap-2 text-sm text-gray-500">
+//                 <span className="text-lg group-hover:-translate-x-1 transition-transform">&lt;</span>
+//                 <span>PREVIOUS</span>
+//               </div>
+//               <p className="font-semibold text-gray-800 group-hover:text-cyan-700 transition">
+//                 {prevBlog.title}
+//               </p>
+//             </Link>
+//           ) : (
+//             <div className="opacity-50">
+//               <div className="flex items-center gap-2 text-sm text-gray-400">
+//                 <span className="text-lg">&lt;</span>
+//                 <span>PREVIOUS</span>
+//               </div>
+//               <p className="font-semibold text-gray-400">Tidak ada posting sebelumnya</p>
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Next */}
+//         <div className="flex-1 text-right">
+//           {nextBlog ? (
+//             <Link
+//               href={`/blogs/${nextBlog.slug}`}
+//               className="group inline-block"
+//             >
+//               <div className="flex justify-end items-center gap-2 text-sm text-gray-500">
+//                 <span>NEXT</span>
+//                 <span className="text-lg group-hover:translate-x-1 transition-transform">&gt;</span>
+//               </div>
+//               <p className="font-semibold text-gray-800 group-hover:text-cyan-700 transition">
+//                 {nextBlog.title}
+//               </p>
+//             </Link>
+//           ) : (
+//             <div className="opacity-50 text-right">
+//               <div className="flex justify-end items-center gap-2 text-sm text-gray-400">
+//                 <span>NEXT</span>
+//                 <span className="text-lg">&gt;</span>
+//               </div>
+//               <p className="font-semibold text-gray-400">Tidak ada posting selanjutnya</p>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+
+//       {/* 💬 Komentar Section */}
+//       <div className="mt-6  pt-4">
+//         <h3 className="text-lg font-semibold mb-3 text-black">Komentar</h3>
+//         {comments.length ? (
+//           comments.map((c) => (
+//             <div key={c.id} className="bg-gray-100 p-3 rounded-md text-sm mb-2">
+//               <p className="font-medium text-gray-800">{c.user?.name}</p>
+//               <p className="text-gray-700">{c.content}</p>
+//               <p className="text-gray-400 text-xs">
+//                 {new Date(c.created_at).toLocaleString("id-ID")}
+//               </p>
+//             </div>
+//           ))
+//         ) : (
+//           <p className="text-gray-500 text-sm">Belum ada komentar.</p>
+//         )}
+
+//         {user ? (
+//           <div className="mt-4">
+//             <textarea
+//               className="w-full border border-slate-300 rounded-md p-2 h-20 text-sm"
+//               value={newComment}
+//               onChange={(e) => setNewComment(e.target.value)}
+//               placeholder="Tulis komentar kamu..."
+//             />
+//             <button
+//               onClick={handleSubmit}
+//               className="mt-2 px-3 py-3 bg-cyan-700 text-white font-medium text-sm rounded-md hover:bg-cyan-800"
+//             >
+//               Kirim Komentar
+//             </button>
+//           </div>
+//         ) : (
+//           <p className="text-gray-500 text-sm mt-2">Login untuk menulis komentar.</p>
+//         )}
+//       </div>
+//     </div>
+//     </div>
+//   );
+// }
 
 
 

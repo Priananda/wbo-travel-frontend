@@ -7,7 +7,7 @@ import Image from "next/image";
 import Navbar from "@/app/components/navbar";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import GalleryCarousel from "@/app/components/galleryCarousel/index";
-
+import { api } from "@/app/api/api"; 
 import {
   Calendar,
   Users,
@@ -48,21 +48,38 @@ export default function PaketTourDetailPage() {
   const [paket, setPaket] = useState<PaketTourDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const res = await axios.get<PaketTourDetail>(
-          `http://127.0.0.1:8000/api/paket-tours/${slug}`
-        );
-        setPaket(res.data);
-      } catch {
-        setPaket(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDetail();
-  }, [slug]);
+
+useEffect(() => {
+  const fetchDetail = async () => {
+    try {
+      const { data } = await api.get<PaketTourDetail>(`/paket-tours/${slug}`);
+      setPaket(data);
+    } catch (error) {
+      console.error("Gagal memuat data paket:", error);
+      setPaket(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchDetail();
+}, [slug]);
+
+  // useEffect(() => {
+  //   const fetchDetail = async () => {
+  //     try {
+  //       const res = await axios.get<PaketTourDetail>(
+  //         `http://127.0.0.1:8000/api/paket-tours/${slug}`
+  //       );
+  //       setPaket(res.data);
+  //     } catch {
+  //       setPaket(null);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchDetail();
+  // }, [slug]);
 
   if (loading) return <Loading />; 
 

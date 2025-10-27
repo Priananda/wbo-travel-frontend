@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import Sidebar from "@/app/components/admin/sidebar";
 import { Trash2, Loader2, Search } from "lucide-react";
-
+import { api, adminApi  } from "@/app/api/api";
 interface Comment {
   id: number;
   blog?: { title?: string };
@@ -18,9 +16,20 @@ export default function ViewKomentarPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // const fetchComments = async () => {
+  //   try {
+  //     const res = await axios.get("http://127.0.0.1:8000/api/comments");
+  //     setComments(res.data.data || []);
+  //   } catch (err) {
+  //     console.error("Gagal ambil komentar:", err);
+  //     setComments([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const fetchComments = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/api/comments");
+      const res = await api.get("/comments");
       setComments(res.data.data || []);
     } catch (err) {
       console.error("Gagal ambil komentar:", err);
@@ -34,34 +43,47 @@ export default function ViewKomentarPage() {
     fetchComments();
   }, []);
 
- // ✅ Fungsi hapus komentar dengan Bearer Token
+ // Fungsi hapus komentar dengan Bearer Token
+// const handleDelete = async (id: number) => {
+//   const confirmDelete = confirm("Yakin ingin menghapus komentar ini?");
+//   if (!confirmDelete) return;
+
+//   try {
+//     // Ambil token dari localStorage (pastikan kamu simpan di sana saat login)
+//     const token = localStorage.getItem("token");
+
+//     if (!token) {
+//       alert("Token tidak ditemukan. Silakan login ulang.");
+//       return;
+//     }
+
+//     await axios.delete(`http://127.0.0.1:8000/api/admin/comments/${id}`, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         Accept: "application/json",
+//       },
+//     });
+
+//     alert("Komentar berhasil dihapus ✅");
+//     fetchComments(); // Refresh data
+//   } catch (err) {
+//     console.error("Gagal hapus komentar:", err);
+//     alert("Gagal menghapus komentar ❌");
+//   }
+// };
 const handleDelete = async (id: number) => {
-  const confirmDelete = confirm("Yakin ingin menghapus komentar ini?");
-  if (!confirmDelete) return;
+    const confirmDelete = confirm("Yakin ingin menghapus komentar ini?");
+    if (!confirmDelete) return;
 
-  try {
-    // Ambil token dari localStorage (pastikan kamu simpan di sana saat login)
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Token tidak ditemukan. Silakan login ulang.");
-      return;
+    try {
+      await adminApi.delete(`comments/${id}`);
+      alert("Komentar berhasil dihapus");
+      fetchComments();
+    } catch (err) {
+      console.error("Gagal hapus komentar:", err);
+      alert("Gagal menghapus komentar");
     }
-
-    await axios.delete(`http://127.0.0.1:8000/api/admin/comments/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    });
-
-    alert("Komentar berhasil dihapus ✅");
-    fetchComments(); // Refresh data
-  } catch (err) {
-    console.error("Gagal hapus komentar:", err);
-    alert("Gagal menghapus komentar ❌");
-  }
-};
+  };
 
 
   // 🔹 Filter komentar berdasarkan isi atau nama user/blog

@@ -29,7 +29,7 @@ export default function UserLoginPage() {
     AOS.init({ duration: 600, once: true });
   }, []);
 
-  // 🧠 Validasi field
+  // Validasi field
   const validateField = (name: string, value: string) => {
     let message = "";
 
@@ -63,7 +63,7 @@ export default function UserLoginPage() {
     validateField(name, value);
   };
 
-  // 🚀 Submit login
+  // Submit login
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoadingUsers(true);
@@ -94,7 +94,7 @@ export default function UserLoginPage() {
     }
   };
 
-  // 🔑 Login dengan Google
+  // Login dengan Google
   const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
     if (!credentialResponse.credential) return;
     setIsLoadingUsers(true);
