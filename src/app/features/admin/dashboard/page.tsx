@@ -1,23 +1,30 @@
 "use client";
 
+import Image from "next/image";
 import { useAuth } from "@/app/services/Auth";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
+import logoWBO from "@/app/assets/images/logo-wbo.png";
 
 export default function AdminDashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <ProtectedRoute allowedRoles={["admin"]}>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-green-50">
-        <h1 className="text-3xl font-bold">Dashboard {user?.role}</h1>
-        <p className="text-gray-600">Welcome, {user?.name}</p>
-        <button
-          onClick={logout}
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Logout
-        </button>
-      </div>
+      <div className="-mt-28 flex flex-col items-center justify-center bg-white h-screen">
+         <Image
+          src={logoWBO}
+          alt="Logo WBO"
+          width={190}
+          height={180}
+          className="mb-4"
+          priority
+        />
+  <h1 className="text-center font-bold text-4xl drop-shadow-xs">
+    Selamat Datang {user?.role}
+  </h1>
+  <div className="mt-4 w-80 h-1 rounded-full bg-gradient-to-r from-teal-600 to-cyan-700" />
+</div>
+
     </ProtectedRoute>
   );
 }

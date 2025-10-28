@@ -3,17 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { hkGrotesk } from "@/app/fonts/fonts";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/services/Auth";
 import { motion, AnimatePresence } from "framer-motion";
 import LogoWBO from "@/app/assets/images/logo-wbo.png";
+import Loading from "@/app/components/loading/index";
+import TopBarContact from "@/app/components/topBarContact/page";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuth();
+
   const [scrolled, setScrolled] = useState(false);
   const [menuSidebar, setMenuSidebar] = useState(false);
+  const [isLoadingNav, setIsLoadingNav] = useState(false);
+  const [targetHref, setTargetHref] = useState<string | null>(null);
 
   // Scroll effect
   useEffect(() => {
@@ -22,177 +28,133 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // List menu
+  // Detect route change selesai
+  useEffect(() => {
+    if (isLoadingNav && targetHref && pathname === targetHref) {
+      setIsLoadingNav(false);
+      setTargetHref(null);
+    }
+  }, [pathname, isLoadingNav, targetHref]);
+
+  // Navigasi
+  const handleNavClick = async (href: string) => {
+    if (pathname === href) return;
+    setIsLoadingNav(true);
+    setTargetHref(href);
+    router.push(href);
+  };
+
+  // Login
+  const handleLoginClick = async () => {
+    setIsLoadingNav(true);
+    setTargetHref("/auth/users/login");
+    router.push("/auth/users/login");
+  };
+
+  // Logout
+  const handleLogoutClick = async () => {
+    setIsLoadingNav(true);
+    try {
+      await logout();
+      setTargetHref("/auth/users/login");
+      router.push("/auth/users/login");
+    } catch (err) {
+      console.error("Logout gagal:", err);
+      setIsLoadingNav(false);
+    }
+  };
+
+  // Menu list
   const menuItems = [
-    { href: "/features/users/dashboard", label: "Home" },
+    { href: "/users/dashboard", label: "Home" },
     { href: "/packages", label: "Paket Bali Tour" },
-    { href: "/features/users/gallery", label: "Gallery" },
-    { href: "/features/users/contact", label: "Kontak" },
-    { href: "/features/users/about-us", label: "Tentang Kami" },
-    { href: "/t", label: "Blog" },
+    { href: "/users/gallery", label: "Gallery" },
+    { href: "/users/contact", label: "Kontak" },
+    { href: "/users/about-us", label: "Tentang Kami" },
+    { href: "/blogs", label: "Blog" },
   ];
 
   return (
     <>
-      {/* 🔹 TOP BAR (desktop only) */}
-      <div
-        className={`hidden lg:block fixed left-1/2 -translate-x-1/2 z-50 w-[96%] rounded-full overflow-hidden transition-all duration-500 shadow-md ${
-          scrolled
-            ? "top-0 opacity-0 -translate-y-10 pointer-events-none"
-            : "top-[10px] opacity-100 translate-y-0"
-        }`}
-      >
-        <div className="py-2 px-6 bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-[15px] font-medium flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <span>📧</span>
-              <span>idbalisundaram@gmail.com</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span>📞</span>
-              <span>+62 853 3775 517</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span>📍</span>
-              <span>Jl. Pudak No 3A Batubulan</span>
-            </div>
-          </div>
-
-          {/* Sosial kanan */}
-          <div className="flex items-center space-x-4">
-            <Link
-              href="https://facebook.com/balisundaramtravel"
-              target="_blank"
-              className="hover:opacity-80"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H8v-3h2.4V9.5a3.4 3.4 0 0 1 3.7-3.8 15.1 15.1 0 0 1 2.2.2v2.5h-1.2c-1.2 0-1.5.8-1.5 1.5V12H18l-.5 3h-3v7A10 10 0 0 0 22 12z" />
-              </svg>
-            </Link>
-            <Link
-              href="https://instagram.com/balisundaramtravel"
-              target="_blank"
-              className="hover:opacity-80"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 2a3 3 0 1 1-3 3 3 3 0 0 1 3-3zm4.5-2.75a1.25 1.25 0 1 0 1.25 1.25A1.25 1.25 0 0 0 16.5 6.25z" />
-              </svg>
-            </Link>
-            <Link
-              href="https://www.tiktok.com/@balisundaramtravel"
-              target="_blank"
-              className="hover:opacity-80"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12.3 2h3a5.3 5.3 0 0 0 5.2 5.2v3A8.3 8.3 0 0 1 13.2 7v7.1a5 5 0 1 1-5-5v3a2 2 0 1 0 2 2V2z" />
-              </svg>
-            </Link>
-          </div>
+      {/* Overlay loading */}
+      {isLoadingNav && (
+        <div>
+          <Loading />
         </div>
-      </div>
+      )}
 
-      {/* 🔹 NAVBAR UTAMA */}
+      {/* Top Bar */}
+      <TopBarContact scrolled={scrolled} />
+
+      {/* Main Navbar */}
       <header
-        className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 shadow-md rounded-2xl w-[99%] max-w-6xl ${
+        className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 shadow-md rounded-2xl w-[96%] md:w-[98%] lg:w-[99%] max-w-6xl ${
           scrolled ? "top-2 bg-white" : "top-[60px] bg-white"
         }`}
       >
         <div className="px-6 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-5">
-            <Image
-              src={LogoWBO}
-              alt="Logo Bali Wisata Oke"
-              width={45}
-              height={45}
-            />
-            <span
-              className={`text-lg font-semibold ${hkGrotesk.className}`}
-            >
-              <span className="bg-gradient-to-r from-teal-600 to-cyan-700 bg-clip-text text-transparent">
-                WISATA
-              </span>{" "}
+            <Image src={LogoWBO} alt="Logo Bali Wisata Oke" width={45} height={45} />
+            <span className={`text-lg font-semibold ${hkGrotesk.className}`}>
+              <span className="bg-gradient-to-r from-teal-600 to-cyan-700 bg-clip-text text-transparent">WISATA</span>{" "}
               <span className="text-black">BALI OKE</span>
             </span>
           </Link>
 
-          {/* 🔹 MENU NAVIGASI DESKTOP */}
-          <nav
-            className={`hidden lg:flex text-md space-x-8 text-gray-800 font-semibold ${hkGrotesk.className}`}
-          >
+          {/* Menu Desktop */}
+          <nav className={`hidden lg:flex text-md space-x-8 text-gray-800 font-semibold  ${hkGrotesk.className}`}>
             {menuItems.map((item) => (
-              <Link
+              <button
                 key={item.href}
-                href={item.href}
-                className={`relative transition group ${
-                  pathname === item.href ? "text-teal-600" : "hover:text-teal-800"
+                onClick={() => handleNavClick(item.href)}
+                className={`relative transition group cursor-pointer ${
+                  pathname === item.href ? "text-teal-700" : "hover:text-teal-800"
                 }`}
               >
                 {item.label}
-                {/* 🔹 Underline Gradient */}
-                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-teal-600 to-cyan-700 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-teal-600 to-cyan-700 transition-all duration-300 group-hover:w-full" />
+              </button>
             ))}
           </nav>
 
-          {/* 🔹 Tombol kanan */}
+          {/* Right Buttons */}
           <div className="flex items-center space-x-4">
-            {user && (
+            {user ? (
               <>
-                <span
-                  className={`hidden lg:block text-md text-gray-800 font-semibold ${hkGrotesk.className}`}
-                >
+                <span className={`hidden cursor-pointer lg:block text-md text-gray-800 font-semibold ${hkGrotesk.className}`}>
                   Hi, {user.name}
                 </span>
                 <button
-                  onClick={logout}
-                  className={`hidden lg:block px-5 py-2 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-md rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600 font-medium ${hkGrotesk.className}`}
+                  onClick={handleLogoutClick}
+                  className={`hidden lg:block px-5 py-2 bg-cyan-700 text-white rounded-lg shadow-sm hover:bg-cyan-800 font-medium ${hkGrotesk.className}`}
                 >
                   Logout
                 </button>
               </>
+            ) : (
+              <button
+                onClick={handleLoginClick}
+                className={`hidden lg:block px-5 py-2 bg-cyan-700 text-white rounded-lg shadow-sm hover:bg-cyan-800 font-medium ${hkGrotesk.className}`}
+              >
+                Login
+              </button>
             )}
 
-            {/* 🔸 Hamburger untuk HP & tablet */}
+            {/* Hamburger Icon */}
             <button
               onClick={() => setMenuSidebar(true)}
-              className="block lg:hidden text-gray-800 hover:text-teal-600 focus:outline-none cursor-pointer"
+              className="block lg:hidden text-gray-800 hover:text-cyan-700 cursor-pointer"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+              <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
           </div>
         </div>
       </header>
 
-      {/* 🔹 SIDEBAR + OVERLAY */}
+      {/* Sidebar Mobile */}
       <AnimatePresence>
         {menuSidebar && (
           <>
@@ -209,47 +171,55 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ duration: 0.3 }}
-              className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-40 p-6 flex flex-col"
+              className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-40 p-6 flex flex-col items-start"
             >
-              <div className="flex justify-between items-center mb-6">
+              <div className="w-full flex justify-between items-center mb-6">
                 <div className="text-lg font-semibold text-gray-800">
                   {user ? `Hi, ${user.name}` : "Selamat Datang"}
                 </div>
                 <button
                   onClick={() => setMenuSidebar(false)}
-                  className="text-gray-800 text-2xl hover:text-teal-600 cursor-pointer"
+                  className="text-gray-800 text-2xl hover:text-cyan-700"
                 >
                   ✕
                 </button>
               </div>
 
-              {/* 🔹 MENU SIDEBAR */}
-              <nav className="flex flex-col space-y-4 text-gray-800 font-semibold cursor-pointer">
+              <nav className="flex flex-col space-y-4 text-gray-800 font-semibold w-full">
                 {menuItems.map((item) => (
-                  <Link
+                  <button
                     key={item.href}
-                    href={item.href}
-                    onClick={() => setMenuSidebar(false)}
-                    className={`relative transition group ${
-                      pathname === item.href
-                        ? "text-teal-700"
-                        : "hover:text-teal-800"
+                    onClick={() => {
+                      setMenuSidebar(false);
+                      handleNavClick(item.href);
+                    }}
+                    className={`text-left cursor-pointer ${
+                      pathname === item.href ? "text-teal-700" : "hover:text-teal-800"
                     }`}
                   >
                     {item.label}
-                    <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-teal-600 to-cyan-700 transition-all duration-300 group-hover:w-30"></span>
-                  </Link>
+                  </button>
                 ))}
 
-                {user && (
+                {user ? (
                   <button
                     onClick={() => {
-                      logout();
                       setMenuSidebar(false);
+                      handleLogoutClick();
                     }}
-                    className="mt-6 px-4 py-2 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-md rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600"
+                       className="mt-6 w-full px-4 py-2 bg-cyan-700 hover:bg-cyan-800 text-white rounded-lg shadow-sm"
                   >
                     Logout
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setMenuSidebar(false);
+                      handleLoginClick();
+                    }}
+                    className="mt-6 w-full px-4 py-2 bg-cyan-700 hover:bg-cyan-800 text-white rounded-lg shadow-sm"
+                  >
+                    Login
                   </button>
                 )}
               </nav>
@@ -260,5 +230,286 @@ export default function Navbar() {
     </>
   );
 }
+
+
+// "use client";
+
+// import Link from "next/link";
+// import Image from "next/image";
+// import { hkGrotesk } from "@/app/fonts/fonts";
+// import { usePathname } from "next/navigation";
+// import { useEffect, useState } from "react";
+// import { useAuth } from "@/app/services/Auth";
+// import { motion, AnimatePresence } from "framer-motion";
+// import LogoWBO from "@/app/assets/images/logo-wbo.png";
+
+// export default function Navbar() {
+//   const pathname = usePathname();
+//   const { user, logout } = useAuth();
+//   const [scrolled, setScrolled] = useState(false);
+//   const [menuSidebar, setMenuSidebar] = useState(false);
+
+//   // Scroll effect
+//   useEffect(() => {
+//     const handleScroll = () => setScrolled(window.scrollY > 50);
+//     window.addEventListener("scroll", handleScroll);
+//     return () => window.removeEventListener("scroll", handleScroll);
+//   }, []);
+
+//   // List menu
+//   const menuItems = [
+//     { href: "/features/users/dashboard", label: "Home" },
+//     { href: "/packages", label: "Paket Bali Tour" },
+//     { href: "/features/users/gallery", label: "Gallery" },
+//     { href: "/features/users/contact", label: "Kontak" },
+//     { href: "/features/users/about-us", label: "Tentang Kami" },
+//     { href: "/features/users/blogs", label: "Blog" },
+//   ];
+
+//   return (
+//     <>
+//       {/* 🔹 TOP BAR (desktop only) */}
+//       <div
+//         className={`hidden lg:block fixed left-1/2 -translate-x-1/2 z-50 w-[96%] rounded-full overflow-hidden transition-all duration-500 shadow-md ${
+//           scrolled
+//             ? "top-0 opacity-0 -translate-y-10 pointer-events-none"
+//             : "top-[10px] opacity-100 translate-y-0"
+//         }`}
+//       >
+//         <div className="py-2 px-6 bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-[15px] font-medium flex items-center justify-between">
+//           <div className="flex items-center space-x-6">
+//             <div className="flex items-center space-x-2">
+//               <span>📧</span>
+//               <span>idbalisundaram@gmail.com</span>
+//             </div>
+//             <div className="flex items-center space-x-2">
+//               <span>📞</span>
+//               <span>+62 853 3775 517</span>
+//             </div>
+//             <div className="flex items-center space-x-2">
+//               <span>📍</span>
+//               <span>Jl. Pudak No 3A Batubulan</span>
+//             </div>
+//           </div>
+
+//           {/* Sosial kanan */}
+//           <div className="flex items-center space-x-4">
+//             <Link
+//               href="https://facebook.com/balisundaramtravel"
+//               target="_blank"
+//               className="hover:opacity-80"
+//             >
+//               <svg
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 className="w-5 h-5"
+//                 fill="currentColor"
+//                 viewBox="0 0 24 24"
+//               >
+//                 <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H8v-3h2.4V9.5a3.4 3.4 0 0 1 3.7-3.8 15.1 15.1 0 0 1 2.2.2v2.5h-1.2c-1.2 0-1.5.8-1.5 1.5V12H18l-.5 3h-3v7A10 10 0 0 0 22 12z" />
+//               </svg>
+//             </Link>
+//             <Link
+//               href="https://instagram.com/balisundaramtravel"
+//               target="_blank"
+//               className="hover:opacity-80"
+//             >
+//               <svg
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 className="w-5 h-5"
+//                 fill="currentColor"
+//                 viewBox="0 0 24 24"
+//               >
+//                 <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 2a3 3 0 1 1-3 3 3 3 0 0 1 3-3zm4.5-2.75a1.25 1.25 0 1 0 1.25 1.25A1.25 1.25 0 0 0 16.5 6.25z" />
+//               </svg>
+//             </Link>
+//             <Link
+//               href="https://www.tiktok.com/@balisundaramtravel"
+//               target="_blank"
+//               className="hover:opacity-80"
+//             >
+//               <svg
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 className="w-5 h-5"
+//                 fill="currentColor"
+//                 viewBox="0 0 24 24"
+//               >
+//                 <path d="M12.3 2h3a5.3 5.3 0 0 0 5.2 5.2v3A8.3 8.3 0 0 1 13.2 7v7.1a5 5 0 1 1-5-5v3a2 2 0 1 0 2 2V2z" />
+//               </svg>
+//             </Link>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* 🔹 NAVBAR UTAMA */}
+//       <header
+//         className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 shadow-md rounded-2xl w-[96%] md:w-[98%] lg:w-[99%] max-w-6xl ${
+//           scrolled ? "top-2 bg-white" : "top-[60px] bg-white"
+//         }`}
+//       >
+//         <div className="px-6 py-3 flex items-center justify-between">
+//           {/* Logo */}
+//           <Link href="/" className="flex items-center space-x-5">
+//             <Image
+//               src={LogoWBO}
+//               alt="Logo Bali Wisata Oke"
+//               width={45}
+//               height={45}
+//             />
+//             <span
+//               className={`text-lg font-semibold ${hkGrotesk.className}`}
+//             >
+//               <span className="bg-gradient-to-r from-teal-600 to-cyan-700 bg-clip-text text-transparent">
+//                 WISATA
+//               </span>{" "}
+//               <span className="text-black">BALI OKE</span>
+//             </span>
+//           </Link>
+
+//           {/* 🔹 MENU NAVIGASI DESKTOP */}
+//           <nav
+//             className={`hidden lg:flex text-md space-x-8 text-gray-800 font-semibold ${hkGrotesk.className}`}
+//           >
+//             {menuItems.map((item) => (
+//               <Link
+//                 key={item.href}
+//                 href={item.href}
+//                 className={`relative transition group ${
+//                   pathname === item.href ? "text-teal-700" : "hover:text-teal-800"
+//                 }`}
+//               >
+//                 {item.label}
+//                 {/* 🔹 Underline Gradient */}
+//                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-teal-600 to-cyan-700 transition-all duration-300 group-hover:w-full"></span>
+//               </Link>
+//             ))}
+//           </nav>
+
+//           {/* 🔹 Tombol kanan */}
+//           <div className="flex items-center space-x-4">
+//             {user ? (
+//   <>
+//     <span
+//       className={`hidden lg:block text-md text-gray-800 font-semibold ${hkGrotesk.className}`}
+//     >
+//       Hi, {user.name}
+//     </span>
+//     <button
+//       onClick={logout}
+//       className={`hidden lg:block px-5 py-2 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-md rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600 font-medium ${hkGrotesk.className}`}
+//     >
+//       Logout
+//     </button>
+//   </>
+// ) : (
+//   <Link
+//     href="/features/users/login"
+//     className={`hidden lg:block px-5 py-2 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-md rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600 font-medium ${hkGrotesk.className}`}
+//   >
+//     Login
+//   </Link>
+// )}
+
+
+//             {/* 🔸 Hamburger untuk HP & tablet */}
+//             <button
+//               onClick={() => setMenuSidebar(true)}
+//               className="block lg:hidden text-gray-800 hover:text-teal-600 focus:outline-none cursor-pointer"
+//             >
+//               <svg
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 className="h-7 w-7"
+//                 fill="none"
+//                 viewBox="0 0 24 24"
+//                 stroke="currentColor"
+//               >
+//                 <path
+//                   strokeLinecap="round"
+//                   strokeLinejoin="round"
+//                   strokeWidth={2}
+//                   d="M4 6h16M4 12h16M4 18h16"
+//                 />
+//               </svg>
+//             </button>
+//           </div>
+//         </div>
+//       </header>
+
+//       {/* 🔹 SIDEBAR + OVERLAY */}
+//       <AnimatePresence>
+//         {menuSidebar && (
+//           <>
+//             <motion.div
+//               initial={{ opacity: 0 }}
+//               animate={{ opacity: 0.5 }}
+//               exit={{ opacity: 0 }}
+//               transition={{ duration: 0.3 }}
+//               className="fixed inset-0 bg-black z-30"
+//               onClick={() => setMenuSidebar(false)}
+//             />
+//             <motion.div
+//               initial={{ x: "-100%" }}
+//               animate={{ x: 0 }}
+//               exit={{ x: "-100%" }}
+//               transition={{ duration: 0.3 }}
+//               className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-40 p-6 flex flex-col"
+//             >
+//               <div className="flex justify-between items-center mb-6">
+//                 <div className="text-lg font-semibold text-gray-800">
+//                   {user ? `Hi, ${user.name}` : "Selamat Datang"}
+//                 </div>
+//                 <button
+//                   onClick={() => setMenuSidebar(false)}
+//                   className="text-gray-800 text-2xl hover:text-teal-600 cursor-pointer"
+//                 >
+//                   ✕
+//                 </button>
+//               </div>
+
+//               {/* 🔹 MENU SIDEBAR */}
+//               <nav className="flex flex-col space-y-4 text-gray-800 font-semibold cursor-pointer">
+//                 {menuItems.map((item) => (
+//                   <Link
+//                     key={item.href}
+//                     href={item.href}
+//                     onClick={() => setMenuSidebar(false)}
+//                     className={`relative transition group ${
+//                       pathname === item.href
+//                         ? "text-teal-700"
+//                         : "hover:text-teal-800"
+//                     }`}
+//                   >
+//                     {item.label}
+//                     <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-teal-600 to-cyan-700 transition-all duration-300 group-hover:w-30"></span>
+//                   </Link>
+//                 ))}
+
+//                 {user ? (
+//   <button
+//     onClick={() => {
+//       logout();
+//       setMenuSidebar(false);
+//     }}
+//     className="mt-6 px-4 py-2 cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-md rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600"
+//   >
+//     Logout
+//   </button>
+// ) : (
+//   <Link
+//     href="/features/users/login"
+//     onClick={() => setMenuSidebar(false)}
+//     className="mt-6 px-4 py-2 text-center cursor-pointer bg-gradient-to-r from-teal-600 to-cyan-700 text-white text-md rounded-lg shadow-sm hover:from-teal-800 hover:to-cyan-600"
+//   >
+//     Login
+//   </Link>
+// )}
+
+//               </nav>
+//             </motion.div>
+//           </>
+//         )}
+//       </AnimatePresence>
+//     </>
+//   );
+// }
 
 

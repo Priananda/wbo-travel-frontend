@@ -20,17 +20,19 @@ type User = {
 
 type AuthContextType = {
   user: User;
+  token: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
-  setUser: (user: User) => void; // ✅ ditambahkan agar bisa dipakai di login Google
+  setUser: (user: User) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const getCsrf = async () => {
@@ -41,6 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await getCsrf();
     const res = await api.post("/login", { email, password });
     localStorage.setItem("token", res.data.token);
+    setToken(res.data.token);
     setUser(res.data.user);
   };
 
@@ -48,37 +51,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await getCsrf();
     const res = await api.post("/register", { name, email, password });
     localStorage.setItem("token", res.data.token);
+    setToken(res.data.token);
     setUser(res.data.user);
   };
 
-  const logout = async () => {
-    const currentRole = user?.role;
-    try {
-      await api.post("/logout");
-    } catch (e) {
-      console.error("Logout failed:", e);
-    }
-    localStorage.removeItem("token");
-    setUser(null);
+const logout = async () => {
+  const currentRole = user?.role; // ✅ Simpan role sebelum setUser(null)
 
-    if (currentRole === "admin" || currentRole === "super_admin") {
-      window.location.href = "/features/admin/login";
-    } else {
-      window.location.href = "/features/users/login";
-    }
-  };
+  try {
+    await api.post("/logout");
+  } catch (e) {
+    console.error("Logout failed:", e);
+  }
+
+  localStorage.removeItem("token");
+  setToken(null);
+  setUser(null);
+
+  // ✅ Redirect sesuai role terakhir
+  if (currentRole === "admin" || currentRole === "super_admin") {
+    window.location.href = "/auth/admin/login";
+  } else {
+    window.location.href = "/auth/users/login";
+  }
+};
+
 
   const fetchUser = async () => {
+    const tokenFromStorage = localStorage.getItem("token");
+    if (!tokenFromStorage) {
+      setLoading(false);
+      return;
+    }
+    setToken(tokenFromStorage);
+
     try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const res = await api.get("/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(res.data.user);
-      } else {
-        setUser(null);
-      }
+      const res = await api.get("/me", {
+        headers: { Authorization: `Bearer ${tokenFromStorage}` },
+      });
+      setUser(res.data.user);
     } catch (err) {
       console.error("Fetch user gagal:", err);
       setUser(null);
@@ -93,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, login, logout, register, setUser }}
+      value={{ user, token, loading, login, logout, register, setUser }}
     >
       {children}
     </AuthContext.Provider>

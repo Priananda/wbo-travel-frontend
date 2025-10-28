@@ -17,22 +17,28 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
   useEffect(() => {
     if (loading) return;
 
-    console.log("User role:", user?.role);
-  console.log("Allowed roles:", allowedRoles);
-  console.log("Current pathname:", pathname);
-
+    // 🚫 Kalau belum login, redirect ke login page sesuai role yang dibutuhkan
     if (!user) {
-      router.replace("/features/users/login");
+      if (pathname.startsWith("/features/admin")) {
+        router.replace("/auth/admin/login");
+      } else if (pathname.startsWith("/features/super_admin")) {
+        router.replace("/features/super_admin/login");
+      } else {
+        router.replace("/auth/users/login");
+      }
       return;
     }
 
+    // ✅ Kalau sudah login, tapi role tidak cocok, redirect ke dashboard sesuai role mereka
     if (!allowedRoles.includes(user.role)) {
-      if (user.role === "user" && !pathname.startsWith("/features/users")) {
-        router.replace("/features/users/dashboard");
-      } else if (user.role === "admin" && !pathname.startsWith("/features/admin")) {
+      if (user.role === "user") {
+        router.replace("/users/dashboard");
+      } else if (user.role === "admin") {
         router.replace("/features/admin/dashboard");
-      } else if (user.role === "super_admin" && !pathname.startsWith("/features/super_admin")) {
+      } else if (user.role === "super_admin") {
         router.replace("/features/super_admin/dashboard");
+      } else {
+        router.replace("/"); // fallback
       }
     }
   }, [user, loading, pathname, router, allowedRoles]);
@@ -45,7 +51,8 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
     );
   }
 
-  if (!user) return null;
+  // Tidak tampilkan apa pun kalau user tidak cocok
+  if (!user || !allowedRoles.includes(user.role)) return null;
 
   return <>{children}</>;
 }
