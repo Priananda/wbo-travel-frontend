@@ -23,7 +23,7 @@ export default function HomePage() {
   const controlsLeft = useAnimation();
   const controlsRight = useAnimation();
 
-  // ✅ Inisialisasi AOS
+  // Inisialisasi AOS
   useEffect(() => {
     AOS.init({
       duration: 800,
@@ -47,7 +47,7 @@ export default function HomePage() {
     }
   }, [inView, controlsLeft, controlsRight]);
 
-  // 🔹 Data untuk 3 langkah
+  // Data untuk 3 langkah
   const steps = [
     {
       icon: (
