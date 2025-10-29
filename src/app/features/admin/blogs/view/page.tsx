@@ -8,6 +8,7 @@ import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { adminApi } from "@/app/api/api";
+import AlertBlogs from "@/app/components/userAdminModal/page";
 
 interface Blog {
   id: number;
@@ -19,6 +20,14 @@ interface Blog {
   image?: string;
   created_at?: string;
 }
+interface AlertModalState {
+  show: boolean;
+  title: string;
+  message: string;
+  onClose: () => void;
+  showConfirm?: boolean; // tombol "Iya / Tidak"
+  onConfirm?: () => void; // aksi kalau klik "Iya"
+}
 
 export default function ViewBlogPage() {
   const { token } = useAuth();
@@ -28,24 +37,8 @@ export default function ViewBlogPage() {
   const [editBlog, setEditBlog] = useState<Blog | null>(null);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
+  const [alertModal, setAlertModal] = useState<AlertModalState>({ show: false, title: "", message: "", onClose: () => {},});
 
-  // const apiUrl = "http://127.0.0.1:8000/api/admin/blogs";
-
-  // // Ambil semua blog
-  // const fetchBlogs = async () => {
-  //   if (!token) return;
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.get(apiUrl, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-  //     setBlogs(res.data.data || res.data);
-  //   } catch (err) {
-  //     console.error("Gagal ambil data:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const fetchBlogs = async () => {
   setLoading(true);
   try {
@@ -58,19 +51,6 @@ export default function ViewBlogPage() {
   }
 };
 
-
-  // 🔹 Ambil 1 blog untuk diedit
-  // const handleEdit = async (id: number) => {
-  //   if (!token) return;
-  //   try {
-  //     const res = await axios.get(`${apiUrl}/${id}`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-  //     setEditBlog(res.data.data || res.data);
-  //   } catch (err) {
-  //     console.error("Gagal ambil detail blog:", err);
-  //   }
-  // };
   const handleEdit = async (id: number) => {
   try {
     const res = await adminApi.get(`blogs/${id}`);
@@ -81,7 +61,7 @@ export default function ViewBlogPage() {
 };
 
 
-  // 🔹 Handle perubahan input
+  // Handle perubahan input
   const handleEditChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
@@ -98,8 +78,8 @@ export default function ViewBlogPage() {
     }
   };
 
-  // 🔹 Simpan perubahan
-  const handleSave = async () => {
+  // Simpan perubahan
+  const handleEditSubmit = async () => {
     if (!editBlog || !token) return;
     setSaving(true);
     try {
@@ -110,52 +90,88 @@ export default function ViewBlogPage() {
       formData.append("content", editBlog.content || "");
       if (newImage) formData.append("image", newImage);
 
-      // await axios.post(`${apiUrl}/${editBlog.id}?_method=PUT`, formData, {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
       await adminApi.post(`blogs/${editBlog.id}?_method=PUT`, formData, {
         headers: {
         "Content-Type": "multipart/form-data",
           },
       });
+      setAlertModal({
+        show: true,
+        title: "Berhasil",
+        message: "Blog berhasil diperbarui!",
+        onClose: () => {
+          setAlertModal((prev) => ({ ...prev, show: false }));
+          setEditBlog(null);
+          setNewImage(null);
+          fetchBlogs();
+        },
+      });
 
-      alert("Perubahan berhasil disimpan!");
-      setEditBlog(null);
-      setNewImage(null);
-      fetchBlogs();
+      
     } catch (err) {
       console.error("Gagal update blog:", err);
-      alert("Terjadi kesalahan saat menyimpan data!");
+       setAlertModal({
+        show: true,
+        title: "Gagal",
+        message: "Gagal memperbarui blog!",
+        onClose: () => setAlertModal((prev) => ({ ...prev, show: false })),
+      });
     } finally {
       setSaving(false);
     }
   };
 
-  // 🔹 Hapus blog
-  const handleDelete = async (id: number) => {
-    if (!confirm("Yakin ingin menghapus blog ini?")) return;
-    if (!token) return;
-    try {
-      // await axios.delete(`${apiUrl}/${id}`, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
-      await adminApi.delete(`blogs/${id}`);
-      
-      fetchBlogs();
-    } catch (err) {
-      console.error("Gagal hapus:", err);
-    }
-  };
+  // Hapus blog
+  const handleDelete = (id: number) => {
+  setAlertModal({
+    show: true,
+    title: "Konfirmasi Hapus",
+    message: "Apakah Anda yakin ingin menghapus blog ini?",
+    showConfirm: true, //  tampilkan tombol “Ya / Tidak”
+    onConfirm: async () => {
+      // Tutup modal konfirmasi
+      setAlertModal((prev) => ({ ...prev, show: false }));
+
+      try {
+        // Jalankan API delete
+        await adminApi.delete(`blogs/${id}`);
+        fetchBlogs();
+
+        // Tampilkan notifikasi sukses
+        setAlertModal({
+          show: true,
+          title: "Berhasil",
+          message: "Blog berhasil dihapus!",
+          onClose: () =>
+            setAlertModal((prev) => ({ ...prev, show: false })),
+        });
+      } catch (err) {
+        console.error("Gagal hapus blog:", err);
+
+        // Tampilkan notifikasi gagal
+        setAlertModal({
+          show: true,
+          title: "Gagal Menghapus",
+          message: "Terjadi kesalahan saat menghapus blog.",
+          onClose: () =>
+            setAlertModal((prev) => ({ ...prev, show: false })),
+        });
+      }
+    },
+    onClose: () => {
+      // Klik tombol “Tidak” → cukup tutup modal
+      setAlertModal((prev) => ({ ...prev, show: false }));
+    },
+  });
+};
+
 
   useEffect(() => {
     fetchBlogs();
   }, [token]);
 
-  const filteredBlogs = blogs.filter((b) =>
-    b.title.toLowerCase().includes(search.toLowerCase())
+  const filteredBlogs = blogs.filter((blog) =>
+    blog.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -202,7 +218,7 @@ export default function ViewBlogPage() {
               ) : filteredBlogs.length > 0 ? (
                 filteredBlogs.map((blog, i) => (
                   <tr
-                    key={blog.id}
+                   key={`${blog.id || "temp"}-${i}`}
                     className="border-b border-slate-200 hover:bg-slate-50 text-gray-800"
                   >
                     <td className="px-4 py-3 text-center">{i + 1}</td>
@@ -404,7 +420,7 @@ export default function ViewBlogPage() {
                     Batal
                   </button>
                   <button
-                    onClick={handleSave}
+                    onClick={handleEditSubmit}
                     disabled={saving}
                     className="px-4 py-2 rounded-lg bg-cyan-700 text-white hover:bg-cyan-800 disabled:opacity-50"
                   >
@@ -415,6 +431,14 @@ export default function ViewBlogPage() {
             </motion.div>
           </>
         )}
+        <AlertBlogs
+          show={alertModal.show}
+          title={alertModal.title}
+          message={alertModal.message}
+          onClose={alertModal.onClose}
+          showConfirm={alertModal.showConfirm}
+          onConfirm={alertModal.onConfirm}
+        />
       </AnimatePresence>
     </ProtectedRoute>
   );

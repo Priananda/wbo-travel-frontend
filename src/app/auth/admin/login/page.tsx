@@ -9,7 +9,7 @@ import { hkGrotesk } from "@/app/fonts/fonts";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import ReCAPTCHA from "react-google-recaptcha";
-import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+// import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import ModalLoginAdmin from "@/app/components/userAdminModal/page";
@@ -224,20 +224,20 @@ export default function AdminLoginPage() {
 
 
           {/* Pemisah */}
-          <div className="flex items-center my-5">
+          {/* <div className="flex items-center my-5">
             <div className="flex-grow h-px bg-cyan-700/80" />
             <span className="px-2 text-gray-500 text-sm">atau</span>
             <div className="flex-grow h-px bg-cyan-700/80" />
-          </div>
+          </div> */}
 
           {/* Login dengan Google */}
-          <div className="flex justify-center drop-shadow-sm">
+          {/* <div className="flex justify-center drop-shadow-sm">
             <GoogleLogin
               onSuccess={handleGoogleLogin}
               onError={() => console.error("Login via Google gagal")}
               width="100%"
             />
-          </div>
+          </div> */}
         </form>
       </div>
       <ModalLoginAdmin

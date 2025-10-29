@@ -40,12 +40,19 @@ export default function PaketTourPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // const updateUrlParams = (newPage: number, newSort: string) => {
+  //   const params = new URLSearchParams();
+  //   params.set("page", newPage.toString());
+  //   params.set("sort", newSort);
+  //   router.replace(`/packages?${params.toString()}`);
+  // };
   const updateUrlParams = (newPage: number, newSort: string) => {
-    const params = new URLSearchParams();
-    params.set("page", newPage.toString());
-    params.set("sort", newSort);
-    router.replace(`/packages?${params.toString()}`);
-  };
+  const params = new URLSearchParams();
+  params.set("page", newPage.toString());
+  params.set("sort", newSort);
+  router.push(`/packages?${params.toString()}`, { scroll: false });
+};
+
 
   const sortOptions = [
     { value: "default", label: "Default sorting" },
@@ -74,12 +81,18 @@ export default function PaketTourPage() {
     }
   };
 
+  // useEffect(() => {
+  //   const urlPage = Number(searchParams.get("page")) || 1;
+  //   const urlSort = searchParams.get("sort") || "default";
+  //   setPage(urlPage);
+  //   setSort(urlSort);
+  // }, []);
   useEffect(() => {
-    const urlPage = Number(searchParams.get("page")) || 1;
-    const urlSort = searchParams.get("sort") || "default";
-    setPage(urlPage);
-    setSort(urlSort);
-  }, []);
+  const urlPage = Number(searchParams.get("page")) || 1;
+  const urlSort = searchParams.get("sort") || "default";
+  setPage(urlPage);
+  setSort(urlSort);
+}, [searchParams]);
 
   useEffect(() => {
     updateUrlParams(page, sort);
@@ -103,7 +116,7 @@ export default function PaketTourPage() {
           Paket Bali Tour
         </h2>
 
-        {/* 🌀 LOADING INDICATOR */}
+        {/*  LOADING INDICATOR */}
         {loading ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
   {/* Tailwind spinner */}

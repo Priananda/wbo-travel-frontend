@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Trash2, Loader2, Search } from "lucide-react";
 import { api, adminApi  } from "@/app/api/api";
+import AlertComment from "@/app/components/userAdminModal/page";
 interface Comment {
   id: number;
   blog?: { title?: string };
@@ -10,23 +11,22 @@ interface Comment {
   content?: string;
   created_at?: string;
 }
+interface AlertModalState {
+  show: boolean;
+  title: string;
+  message: string;
+  onClose: () => void;
+  showConfirm?: boolean; // tombol "Iya / Tidak"
+  onConfirm?: () => void; // aksi kalau klik "Iya"
+}
+
 
 export default function ViewKomentarPage() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [alertModal, setAlertModal] = useState<AlertModalState>({ show: false, title: "", message: "", onClose: () => {},});
 
-  // const fetchComments = async () => {
-  //   try {
-  //     const res = await axios.get("http://127.0.0.1:8000/api/comments");
-  //     setComments(res.data.data || []);
-  //   } catch (err) {
-  //     console.error("Gagal ambil komentar:", err);
-  //     setComments([]);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const fetchComments = async () => {
     try {
       const res = await api.get("/comments");
@@ -43,56 +43,54 @@ export default function ViewKomentarPage() {
     fetchComments();
   }, []);
 
- // Fungsi hapus komentar dengan Bearer Token
-// const handleDelete = async (id: number) => {
-//   const confirmDelete = confirm("Yakin ingin menghapus komentar ini?");
-//   if (!confirmDelete) return;
+  // handleDelete 
+  const handleDelete = (id: number) => {
+    setAlertModal({
+    show: true,
+    title: "Konfirmasi Hapus",
+    message: "Apakah kamu yakin ingin menghapus komentar ini?",
+    onClose: () => setAlertModal((prev) => ({ ...prev, show: false })),
+    showConfirm: true,
+    onConfirm: async () => {
+      // Tutup modal konfirmasi
+      setAlertModal((prev) => ({ ...prev, show: false }));
 
-//   try {
-//     // Ambil token dari localStorage (pastikan kamu simpan di sana saat login)
-//     const token = localStorage.getItem("token");
+        try {
+          await adminApi.delete(`/comments/${id}`);
+          fetchComments();
 
-//     if (!token) {
-//       alert("Token tidak ditemukan. Silakan login ulang.");
-//       return;
-//     }
+          // Tampilkan modal sukses
+          setAlertModal({
+            show: true,
+            title: "Berhasil",
+            message: "Komentar berhasil dihapus!",
+            onClose: () =>
+              setAlertModal((prev) => ({ ...prev, show: false })),
+          });
+        } catch (err) {
+          console.error("Gagal hapus komentar:", err);
 
-//     await axios.delete(`http://127.0.0.1:8000/api/admin/comments/${id}`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         Accept: "application/json",
-//       },
-//     });
-
-//     alert("Komentar berhasil dihapus ✅");
-//     fetchComments(); // Refresh data
-//   } catch (err) {
-//     console.error("Gagal hapus komentar:", err);
-//     alert("Gagal menghapus komentar ❌");
-//   }
-// };
-const handleDelete = async (id: number) => {
-    const confirmDelete = confirm("Yakin ingin menghapus komentar ini?");
-    if (!confirmDelete) return;
-
-    try {
-      await adminApi.delete(`comments/${id}`);
-      alert("Komentar berhasil dihapus");
-      fetchComments();
-    } catch (err) {
-      console.error("Gagal hapus komentar:", err);
-      alert("Gagal menghapus komentar");
-    }
+          // Tampilkan modal error
+          setAlertModal({
+            show: true,
+            title: "Gagal Menghapus",
+            message: "Terjadi kesalahan saat menghapus komentar.",
+            onClose: () =>
+              setAlertModal((prev) => ({ ...prev, show: false })),
+          });
+        }
+      },
+    });
   };
 
 
-  // 🔹 Filter komentar berdasarkan isi atau nama user/blog
-  const filteredComments = comments.filter((c) => {
+  // Filter komentar berdasarkan label
+  const filteredComments = comments.filter((comment) => {
     const search = searchTerm.toLowerCase();
     return (
-      c.user?.name?.toLowerCase().includes(search) ||
-      c.blog?.title?.toLowerCase().includes(search) ||
-      c.content?.toLowerCase().includes(search)
+      comment.user?.name?.toLowerCase().includes(search) ||
+      comment.blog?.title?.toLowerCase().includes(search) ||
+      comment.content?.toLowerCase().includes(search)
     );
   });
 
@@ -196,6 +194,14 @@ const handleDelete = async (id: number) => {
           </div>
         </div>
       </main>
+       <AlertComment
+        show={alertModal.show}
+        title={alertModal.title}
+        message={alertModal.message}
+        onClose={alertModal.onClose}
+        showConfirm={alertModal.showConfirm}
+  onConfirm={alertModal.onConfirm}
+      />
     </div>
   );
 }

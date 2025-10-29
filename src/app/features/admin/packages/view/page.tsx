@@ -8,7 +8,16 @@ import { useAuth } from "@/app/services/Auth";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 import Image from "next/image";
 import { adminApi } from "@/app/api/api";
+import AlertPackages from "@/app/components/userAdminModal/page";
 
+interface AlertModalState {
+  show: boolean;
+  title: string;
+  message: string;
+  onClose: () => void;
+  showConfirm?: boolean; // tombol "Iya / Tidak"
+  onConfirm?: () => void; // aksi kalau klik "Iya"
+}
 interface PaketTour {
   id: number;
   title: string;
@@ -53,15 +62,16 @@ export default function ViewPaketTourPage() {
   const [editForm, setEditForm] = useState<EditFormData | null>(null);
   const [editLoading, setEditLoading] = useState(false);
   const [newImage, setNewImage] = useState<File | null>(null);
+  const [alertModal, setAlertModal] = useState<AlertModalState>({ show: false, title: "", message: "", onClose: () => {},
+});
+
 
   const fetchPakets = async () => {
     if (!token) return;
     setLoading(true);
     try {
-      // const res = await axios.get(apiUrl, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
-      const res = await adminApi.get("/paket-tours");
+      // Kedepannya memakai paginasi untuk tabel paket di admin
+      const res = await adminApi.get("/paket-tours?per_page=50");
       const data = Array.isArray(res.data)
         ? res.data
         : res.data.data || [];
@@ -73,19 +83,49 @@ export default function ViewPaketTourPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Yakin ingin menghapus paket ini?")) return;
-    if (!token) return;
-    try {
-      // await axios.delete(`${apiUrl}/${id}`, {
-      //   headers: { Authorization: `Bearer ${token}` },
-      // });
-      await adminApi.delete(`/paket-tours/${id}`);
-      fetchPakets();
-    } catch (err) {
-      console.error("Gagal hapus paket:", err);
-    }
-  };
+const handleDelete = (id: number) => {
+  setAlertModal({
+    show: true,
+    title: "Konfirmasi Hapus",
+    message: "Apakah Anda yakin ingin menghapus paket ini?",
+    showConfirm: true, // tampilkan tombol Ya / Tidak
+    onConfirm: async () => {
+      // Tutup modal konfirmasi
+      setAlertModal((prev) => ({ ...prev, show: false }));
+
+      try {
+        // Jalankan API hapus paket
+        await adminApi.delete(`/paket-tours/${id}`);
+        fetchPakets();
+
+        // Tampilkan modal sukses
+        setAlertModal({
+          show: true,
+          title: "Berhasil",
+          message: "Paket tour berhasil dihapus!",
+          onClose: () =>
+            setAlertModal((prev) => ({ ...prev, show: false })),
+        });
+      } catch (err) {
+        console.error("Gagal hapus paket:", err);
+
+        // Tampilkan modal gagal
+        setAlertModal({
+          show: true,
+          title: "Gagal Menghapus",
+          message: "Terjadi kesalahan saat menghapus paket.",
+          onClose: () =>
+            setAlertModal((prev) => ({ ...prev, show: false })),
+        });
+      }
+    },
+    onClose: () => {
+      // Klik tombol “Tidak” → cukup tutup modal
+      setAlertModal((prev) => ({ ...prev, show: false }));
+    },
+  });
+};
+
 
   const openEditModal = (paket: PaketTour) => {
     setEditing(paket);
@@ -142,17 +182,7 @@ export default function ViewPaketTourPage() {
     if (!editing || !token || !editForm) return;
 
     const formData = new FormData();
-    // Object.entries(editForm).forEach(([key, value]) => {
-    //   if (value instanceof File) {
-    //     formData.append(key, value);
-    //   } else if (key === "active") {
-    //     formData.append(key, value ? "1" : "0");
-    //   } else {
-    //     formData.append(key, String(value));
-    //   }
-    // });
-
-    // if (newImage) formData.append("image", newImage);
+ 
     Object.entries(editForm).forEach(([key, value]) => {
   if (key === "image") return; // Jangan kirim field image default
 
@@ -170,25 +200,31 @@ if (newImage) {
 
     setEditLoading(true);
     try {
-      // await axios.post(`${apiUrl}/${editing.id}?_method=PUT`, formData, {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
       await adminApi.post(`/paket-tours/${editing.id}?_method=PUT`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
       });
-
-      alert("Paket tour berhasil diperbarui!");
+      
+      setAlertModal({
+      show: true,
+      title: "Berhasil",
+      message: "Paket tour berhasil diperbarui!",
+      onClose: () => {
+      setAlertModal((prev) => ({ ...prev, show: false }));
       setEditing(null);
       setEditForm(null);
       setNewImage(null);
       fetchPakets();
+      },
+      });
+
     } catch (err) {
-      const error = err as AxiosError;
-      console.error("Gagal update paket:", error.response?.data || error.message);
-      alert("Gagal memperbarui paket!");
+      console.error("Gagal update paket:", err);
+      setAlertModal({
+      show: true,
+      title: "Gagal",
+      message: "Gagal memperbarui paket tour!",
+      onClose: () => setAlertModal((prev) => ({ ...prev, show: false })),
+    });
     } finally {
       setEditLoading(false);
     }
@@ -198,8 +234,8 @@ if (newImage) {
     fetchPakets();
   }, [token]);
 
-  const filteredPakets = pakets.filter((p) =>
-    p.title.toLowerCase().includes(search.toLowerCase())
+  const filteredPakets = pakets.filter((paket) =>
+    paket.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -572,7 +608,16 @@ if (newImage) {
     </>
   )}
 </AnimatePresence>
-    </ProtectedRoute>
+<AlertPackages
+  show={alertModal.show}
+  title={alertModal.title}
+  message={alertModal.message}
+  onClose={alertModal.onClose}
+  showConfirm={alertModal.showConfirm}
+  onConfirm={alertModal.onConfirm}
+/>
+
+</ProtectedRoute>
   );
 }
 

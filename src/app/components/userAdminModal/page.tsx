@@ -1,59 +1,66 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-import { useEffect } from "react";
-import { hkGrotesk } from "@/app/fonts/fonts";
 
-interface AlertModalProps {
+interface AlertCommentProps {
   show: boolean;
-  onClose: () => void;
-  title?: string;
+  title: string;
   message: string;
+  onClose: () => void;
+  showConfirm?: boolean;
+  onConfirm?: () => void;
 }
 
-export default function AlertModal({ show, onClose, title = "Peringatan", message }: AlertModalProps) {
-  // Tutup modal dengan tombol ESC
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
-
+export default function AlertComment({
+  show,
+  title,
+  message,
+  onClose,
+  showConfirm = false,
+  onConfirm,
+}: AlertCommentProps) {
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm ${hkGrotesk.className}`}
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm text-center"
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="bg-white p-6 rounded-lg shadow-md w-[90%] max-w-sm text-center"
+            exit={{ scale: 0.9, opacity: 0 }}
           >
-            <button
-              onClick={onClose}
-              className="absolute top-3 right-3 text-white hover:text-slate-300"
-            >
-              <X size={23} />
-            </button>
+            <h2 className="text-lg font-semibold mb-2">{title}</h2>
+            <p className="text-gray-600 mb-5">{message}</p>
 
-            <h2 className="text-lg font-semibold text-gray-800 mb-5">{title}</h2>
-            <p className="text-gray-800 font-medium mb-5">{message}</p>
-
-            <button
-              onClick={onClose}
-              className="px-6 py-2 bg-cyan-700 text-white rounded-lg hover:bg-cyan-800 transition-colors font-medium"
-            >
-              Tutup
-            </button>
+            {/* Jika showConfirm true → tampilkan dua tombol */}
+            {showConfirm ? (
+              <div className="flex justify-center gap-3">
+                <button
+                  onClick={onClose}
+                  className="px-4 py-2 rounded-lg border border-cyan-700 text-gray-800 hover:bg-slate-100"
+                >
+                  Tidak
+                </button>
+                <button
+                  onClick={onConfirm}
+                  className="px-7 py-2 rounded-lg bg-cyan-700 text-white hover:bg-cyan-800"
+                >
+                  Ya
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onClose}
+                className="px-4 py-2 rounded-lg bg-cyan-700 text-white hover:bg-cyan-800"
+              >
+                Tutup
+              </button>
+            )}
           </motion.div>
         </motion.div>
       )}
