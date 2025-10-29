@@ -203,23 +203,33 @@ export default function ViewBlogPage() {
                 filteredBlogs.map((blog, i) => (
                   <tr
                     key={blog.id}
-                    className="border-b border-slate-200 hover:bg-slate-50"
+                    className="border-b border-slate-200 hover:bg-slate-50 text-gray-800"
                   >
                     <td className="px-4 py-3 text-center">{i + 1}</td>
-                    <td className="px-4 py-3 max-w-[200px] truncate" title={blog.title}>
+                    <td className="px-4 py-3 font-semibold max-w-[100px] truncate" title={blog.title}>
                       {blog.title}
                     </td>
-                    <td className="px-4 py-3">{blog.slug || "-"}</td>
+                    <td className="px-4 py-3 max-w-[100px] truncate">{blog.slug || "-"}</td>
                     <td className="px-4 py-3">{blog.category || "-"}</td>
                     <td className="px-4 py-3">{blog.author_email || "-"}</td>
-                    <td className="px-4 py-3 max-w-[250px] line-clamp-2">
+                    <td className="px-4 py-3 max-w-[100px] truncate">
                       {blog.content || "-"}
                     </td>
-                    <td className="px-4 py-3">
-                      {blog.created_at
-                        ? new Date(blog.created_at).toLocaleDateString()
-                        : "-"}
-                    </td>
+                   <td className="px-4 py-3">
+  {blog.created_at
+    ? new Date(blog.created_at).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false, 
+        timeZone: "Asia/Jakarta", 
+      })
+    : "-"}
+</td>
+
                     <td className="px-4 py-3">
                       {blog.image ? (
                         <Image
@@ -260,7 +270,7 @@ export default function ViewBlogPage() {
               ) : (
                 <tr>
                   <td colSpan={9} className="text-center py-6 text-gray-500 italic">
-                    Tidak ada data blog ditemukan.
+                    Tidak ada data blog yang ditemukan.
                   </td>
                 </tr>
               )}

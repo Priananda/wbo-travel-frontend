@@ -112,7 +112,7 @@ const handleDelete = async (id: number) => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Cari komentar, user, atau judul blog..."
+              placeholder="Cari user, komentar, atau judul blog..."
               className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-300"
             />
           </div>
@@ -142,10 +142,10 @@ const handleDelete = async (id: number) => {
                   filteredComments.map((c, i) => (
                     <tr
                       key={c.id}
-                      className="border-b border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
+                      className="border-b border-slate-200 hover:bg-slate-50 text-gray-800 transition-colors"
                     >
                       <td className="px-4 py-3 text-center align-top">{i + 1}</td>
-                      <td className="px-4 py-3 font-medium text-gray-800 align-top">
+                      <td className="px-4 py-3 font-medium align-top">
                         {c.user?.name || "Anonim"}
                       </td>
                       <td className="px-4 py-3 max-w-[280px] whitespace-normal break-words align-top">
@@ -154,15 +154,21 @@ const handleDelete = async (id: number) => {
                       <td className="px-4 py-3 max-w-[300px] align-top">
                         {c.content || "-"}
                       </td>
-                      <td className="px-4 py-3 text-center text-gray-600 align-top">
-                        {c.created_at
-                          ? new Date(c.created_at).toLocaleDateString("id-ID", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
-                          : "-"}
-                      </td>
+                      <td className="px-4 py-3 text-center align-top">
+  {c.created_at
+    ? new Date(c.created_at).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false, 
+        timeZone: "Asia/Jakarta", 
+      })
+    : "-"}
+</td>
+
 
                       {/* 🔹 Tombol aksi */}
                       <td className="px-4 py-3 text-center">
@@ -181,7 +187,7 @@ const handleDelete = async (id: number) => {
                 ) : (
                   <tr>
                     <td colSpan={6} className="text-center py-6 text-gray-500 italic">
-                      Tidak ada komentar ditemukan.
+                      Tidak ada komentar yang ditemukan.
                     </td>
                   </tr>
                 )}

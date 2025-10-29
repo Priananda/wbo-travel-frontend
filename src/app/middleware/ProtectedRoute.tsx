@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
   useEffect(() => {
     if (loading) return;
 
-    // 🚫 Kalau belum login, redirect ke login page sesuai role yang dibutuhkan
+    // Kalau belum login, redirect ke login page sesuai role yang dibutuhkan
     if (!user) {
       if (pathname.startsWith("/features/admin")) {
         router.replace("/auth/admin/login");
@@ -29,7 +29,7 @@ export default function ProtectedRoute({ children, allowedRoles }: Props) {
       return;
     }
 
-    // ✅ Kalau sudah login, tapi role tidak cocok, redirect ke dashboard sesuai role mereka
+    // Kalau sudah login, tapi role tidak cocok, redirect ke dashboard sesuai role mereka
     if (!allowedRoles.includes(user.role)) {
       if (user.role === "user") {
         router.replace("/users/dashboard");

@@ -38,13 +38,13 @@ export default function FavoriteButton() {
       {/* Modal Popup */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute inset-0"></div>
 
-          <div className="relative bg-white rounded-lg shadow-lg px-6 py-4 animate-fade-in-out">
+          {/* <div className="relative bg-white rounded-lg shadow-lg px-6 py-4 animate-fade-in-out">
             <p className={`text-gray-800 font-medium text-center ${hkGrotesk.className}`}>
               ❤️ Terima kasih sudah menyukai!
             </p>
-          </div>
+          </div> */}
         </div>
       )}
     </>

@@ -50,7 +50,7 @@ export default function CartPage() {
     0
   );
 
-  if (loadingCart) return <Loading />;
+  // if (loadingCart) return <Loading />;
 
   return (
     <div className="max-w-[94%] mx-auto p-6 relative">

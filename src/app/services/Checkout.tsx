@@ -6,6 +6,10 @@ export interface CheckoutPayload {
   billing_email: string;
   billing_phone: string;
   billing_address: string;
+  check_in: string;
+  check_out: string;
+  guest: number;
+  extra_info?: string;
 }
 
 export interface CartItem {

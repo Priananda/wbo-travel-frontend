@@ -23,6 +23,10 @@ interface Order {
   billing_name: string;
   billing_phone: string;
   billing_address: string;
+  check_in?: string;
+  check_out?: string;
+  guest?: number;
+  extra_info?: string;
   status: string;
   total_price: string;
   created_at: string;
@@ -145,7 +149,7 @@ export default function CartViewPage() {
                       colSpan={8}
                       className="text-center py-6 text-gray-500 italic"
                     >
-                      Tidak ada pesanan ditemukan.
+                      Tidak ada pesanan paket tour yang ditemukan.
                     </td>
                   </tr>
                 ) : (
@@ -189,9 +193,21 @@ export default function CartViewPage() {
                         >
                           {order.status}
                         </td>
-                        <td className="px-4 py-3 text-center text-gray-700 whitespace-nowrap">
-                          {new Date(order.created_at).toLocaleString("id-ID")}
-                        </td>
+                       <td className="px-4 py-3 text-center text-gray-700 whitespace-nowrap">
+  {order.created_at
+    ? new Date(order.created_at).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Jakarta",
+      })
+    : "-"}
+</td>
+
                         <td className="px-4 py-3 text-center font-medium">
                           <button
                             onClick={() => setSelectedOrder(order)}
@@ -289,6 +305,44 @@ export default function CartViewPage() {
                         {selectedOrder.billing_address}
                       </p>
                     </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">Check In</p>
+                      <p className="font-semibold text-gray-800">
+                        {selectedOrder.check_in
+                        ? new Date(selectedOrder.check_in).toLocaleDateString("id-ID", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                      : "-"}
+                      </p>
+                    </div>
+                     <div>
+    <p className="text-sm font-medium text-gray-800">Check Out</p>
+    <p className="font-semibold text-gray-800">
+      {selectedOrder.check_out
+        ? new Date(selectedOrder.check_out).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })
+        : "-"}
+    </p>
+  </div>
+   <div>
+    <p className="text-sm font-medium text-gray-800">Jumlah Tamu</p>
+    <p className="font-semibold text-gray-800">
+      {selectedOrder.guest || "-"}
+    </p>
+  </div>
+  {selectedOrder.extra_info && (
+    <div className="sm:col-span-2">
+      <p className="text-sm font-medium text-gray-800">Catatan Tambahan</p>
+      <p className="font-semibold text-gray-800 break-words">
+        {selectedOrder.extra_info}
+      </p>
+    </div>
+  )}
                     <div className="sm:col-span-2">
                       <p className="text-sm font-medium text-gray-800">Status</p>
                       <span

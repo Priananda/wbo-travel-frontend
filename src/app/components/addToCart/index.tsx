@@ -86,21 +86,7 @@ export default function AddToCart({ paketId, title, price, image, description }:
   return (
     <div className="relative">
       {isLoading && <Loading />}
-
-      {/* Floating Cart Icon */}
-      {/* <div className="fixed md:absolute top-36 right-6 z-50 md:z-0">
-        <button
-          onClick={() => setIsCartOpen(!isCartOpen)}
-          className="relative p-3 bg-white rounded-full shadow-md hover:bg-gray-100 transition"
-        >
-          <ShoppingCart className="w-6 h-6 text-cyan-700" />
-          {cart.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5">
-              {cart.length}
-            </span>
-          )}
-        </button>
-      </div> */}
+      
     <div className="fixed md:absolute top-36 right-6  md:-top-70 md:-right-7 lg:-top-80 lg:-right-8  z-50 md:z-0">
     <button
     onClick={() => setIsCartOpen(!isCartOpen)}

@@ -233,6 +233,7 @@ if (newImage) {
                   <th className="px-4 py-3 text-left">Lokasi</th>
                   <th className="px-4 py-3 text-left">Durasi</th>
                   <th className="px-4 py-3 text-left">Harga</th>
+                  <th className="px-4 py-3 text-center">Tanggal</th>
                   <th className="px-4 py-3 text-center">Status</th>
                   <th className="px-4 py-3 text-center">Gambar</th>
                   <th className="px-4 py-3 text-center">Aksi</th>
@@ -244,15 +245,42 @@ if (newImage) {
                   filteredPakets.map((paket, i) => (
                     <tr
                       key={paket.id}
-                      className="border-b border-slate-200 hover:bg-gray-50 transition"
+                      className="border-b border-slate-200 hover:bg-gray-50 text-gray-800 transition"
                     >
                       <td className="px-4 py-3">{i + 1}</td>
-                      <td className="px-4 py-3 font-semibold">{paket.title}</td>
-                      <td className="px-4 py-3">{paket.slug}</td>
-                      <td className="px-4 py-3 max-w-[300px]">{paket.description}</td>
+                     <td className="px-4 py-3 font-semibold max-w-[100px] truncate ">
+  {paket.title}
+</td>
+
+<td className="px-4 py-3  max-w-[100px]  truncate ">
+  {paket.slug}
+</td>
+
+<td
+  className="px-4 py-3  max-w-[100px]  truncate "
+  title={paket.description} // Tooltip untuk lihat teks lengkap
+>
+  {paket.description}
+</td>
+
                       <td className="px-4 py-3">{paket.location}</td>
                       <td className="px-4 py-3">{paket.duration_days}H/{paket.duration_nights}M</td>
                       <td className="px-4 py-3 font-medium">Rp {paket.price.toLocaleString("id-ID")}</td>
+                     <td className="px-4 py-3">
+  {paket.created_at
+    ? new Date(paket.created_at).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "short", 
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false, 
+        timeZone: "Asia/Jakarta", 
+      })
+    : "-"}
+</td>
+
                       <td className="px-4 py-3 text-center">
                         {paket.active ? (
                           <span className="text-green-600 font-semibold">Aktif</span>
@@ -301,7 +329,7 @@ if (newImage) {
                 ) : (
                   <tr>
                     <td colSpan={10} className="text-center py-6 text-gray-500 italic">
-                      Tidak ada data paket tour ditemukan.
+                      Tidak ada paket tour yang ditemukan.
                     </td>
                   </tr>
                 )}
