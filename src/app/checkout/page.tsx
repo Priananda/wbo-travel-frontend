@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { hkGrotesk } from "@/app/fonts/fonts";
 import Navbar from "@/app/components/navbar";
 import { Transition } from "@headlessui/react";
 import BillingFormCheckout from "@/app/components/billingFormCheckout/page";
@@ -28,6 +29,10 @@ export default function CheckoutPage() {
     email: "",
     phone: "",
     address: "",
+    check_in: "",
+    check_out: "",
+    guest: 1,
+    extra_info: "",
   });
 
   const fetchCart = async () => {
@@ -44,47 +49,20 @@ export default function CheckoutPage() {
     fetchCart();
   }, []);
 
+  // const validateBilling = () => {
+  //   return Object.values(billing).every((v) => v.trim() !== "");
+  // };
   const validateBilling = () => {
-    return Object.values(billing).every((v) => v.trim() !== "");
-  };
+  const requiredFields = ["name", "email", "phone", "address", "check_in", "check_out", "guest"];
+  return requiredFields.every((key) => (billing as any)[key]?.toString().trim() !== "");
+};
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setBilling({ ...billing, [e.target.name]: e.target.value });
   };
-
-  // const handleCheckout = async () => {
-  //   if (!validateBilling()) {
-  //     setShowAlert(true);
-  //     return;
-  //   }
-
-  //   setCheckoutLoading(true);
-  //   try {
-  //     const order = await checkoutOrder({
-  //       payment_method:
-  //         paymentMethod === "xendit" ? "xendit_invoice" : "direct_bank",
-  //       billing_name: billing.name,
-  //       billing_email: billing.email,
-  //       billing_phone: billing.phone,
-  //       billing_address: billing.address,
-  //     });
-
-  //     if (!order) throw new Error("Checkout gagal.");
-
-  //     const orderCode = order.order_code;
-
-  //     if (paymentMethod === "xendit" && orderCode) {
-  //       const url = await payXenditInvoice(orderCode);
-  //       if (url) window.location.href = url;
-  //     } else {
-  //       router.push(`/users/dashboard?order=${orderCode}`);
-  //     }
-  //   } finally {
-  //     setCheckoutLoading(false);
-  //   }
-  // };
   const handleCheckout = async () => {
   if (!validateBilling()) {
     setShowAlert(true);
@@ -100,6 +78,10 @@ export default function CheckoutPage() {
       billing_email: billing.email,
       billing_phone: billing.phone,
       billing_address: billing.address,
+      check_in: billing.check_in,
+      check_out: billing.check_out,
+      guest: billing.guest,
+      extra_info: billing.extra_info,
     });
 
     if (!order) throw new Error("Checkout gagal.");
@@ -131,7 +113,7 @@ export default function CheckoutPage() {
 
 
   return (
-    <div className="mt-32 max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
+    <div className={`mt-32 max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 lg:grid-cols-2 gap-8 relative ${hkGrotesk.className}`}>
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar />
       </div>
@@ -150,18 +132,23 @@ export default function CheckoutPage() {
 
       <Transition show={showAlert}>
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg text-center shadow-md">
-            <h2 className="text-red-600 text-lg font-semibold mb-2">
-              Form Billing belum lengkap
-            </h2>
-            <button
-              onClick={() => setShowAlert(false)}
-              className="bg-cyan-700 px-4 py-2 rounded-lg text-white hover:bg-cyan-800"
-            >
-              Tutup
-            </button>
-          </div>
-        </div>
+  <div className="bg-white p-8 rounded-xl text-center shadow-lg max-w-sm mx-4">
+    <h2 className="text-red-600 text-xl font-bold mb-3">
+      Form Billing Belum Lengkap
+    </h2>
+    <p className="text-gray-700 text-base leading-relaxed mb-6">
+      Harap lengkapi data pada form billing terlebih dahulu sebelum melanjutkan
+      proses registrasi paket tour Anda.
+    </p>
+    <button
+      onClick={() => setShowAlert(false)}
+      className="bg-cyan-700 px-6 py-2.5 rounded-lg text-white font-medium hover:bg-cyan-800 transition"
+    >
+      Tutup
+    </button>
+  </div>
+</div>
+
       </Transition>
     </div>
   );

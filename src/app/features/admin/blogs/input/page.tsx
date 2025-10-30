@@ -30,7 +30,7 @@ export default function InputBlogPage() {
     image: null,
   });
 
-  // 🧠 Fungsi bantu: ubah title jadi slug otomatis
+  //  Fungsi bantu: ubah title jadi slug otomatis
   const generateSlug = (text: string) =>
     text
       .toLowerCase()
@@ -38,7 +38,7 @@ export default function InputBlogPage() {
       .replace(/[^\w\s-]/g, "")
       .replace(/\s+/g, "-");
 
-  // 🧠 Handle input text
+  // Handle input text
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -56,7 +56,7 @@ export default function InputBlogPage() {
     }
   };
 
-  // 🖼️ Validasi file upload
+  // Validasi file upload
   const handleFile = (file: File) => {
     const validTypes = ["image/jpeg", "image/jpg", "image/png"];
     const maxSize = 20 * 1024 * 1024; // 20MB
@@ -77,13 +77,13 @@ export default function InputBlogPage() {
     setFormData({ ...formData, image: file });
   };
 
-  // 📂 Handle input file biasa
+  //  Handle input file biasa
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
   };
 
-  // 🎯 Handle drag & drop
+  //  Handle drag & drop
   const handleDrag = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -99,12 +99,12 @@ export default function InputBlogPage() {
     if (file) handleFile(file);
   };
 
-  // 🚀 Submit form
+  // Submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!token) {
-      alert("❌ Kamu belum login!");
+      alert("Kamu belum login!");
       return;
     }
 
@@ -128,7 +128,7 @@ export default function InputBlogPage() {
           },
         });
 
-      alert("✅ Blog berhasil ditambahkan!");
+      alert("Blog berhasil ditambahkan!");
       setFormData({
         title: "",
         slug: "",
@@ -139,7 +139,7 @@ export default function InputBlogPage() {
       });
     } catch (err) {
       console.error(err);
-      alert("❌ Gagal menambah blog.");
+      alert("Gagal menambah blog.");
     } finally {
       setLoading(false);
     }

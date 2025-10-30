@@ -82,7 +82,10 @@ export default function BlogDetailPage() {
     setComments(res.data.data || []);
   };
 
-  if (!blog) return <p className="text-center py-10">Loading...</p>;
+  if (!blog) return  <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <div className="w-8 h-8 border-4 border-t-cyan-700 border-gray-200 rounded-full animate-spin"></div>
+            <p className="mt-4 text-cyan-700 text-md">Loading...</p>
+          </div>;
 
   const htmlContent =
     blogTypoContent[blog.slug] || blogTypoContent.default;

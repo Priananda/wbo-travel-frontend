@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Trash2, Loader2, Search } from "lucide-react";
 import { api, adminApi  } from "@/app/api/api";
+import AlertComment from "@/app/components/userAdminModal/page";
 interface Comment {
   id: number;
   blog?: { title?: string };
@@ -10,23 +11,22 @@ interface Comment {
   content?: string;
   created_at?: string;
 }
+interface AlertModalState {
+  show: boolean;
+  title: string;
+  message: string;
+  onClose: () => void;
+  showConfirm?: boolean; // tombol "Iya / Tidak"
+  onConfirm?: () => void; // aksi kalau klik "Iya"
+}
+
 
 export default function ViewKomentarPage() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [alertModal, setAlertModal] = useState<AlertModalState>({ show: false, title: "", message: "", onClose: () => {},});
 
-  // const fetchComments = async () => {
-  //   try {
-  //     const res = await axios.get("http://127.0.0.1:8000/api/comments");
-  //     setComments(res.data.data || []);
-  //   } catch (err) {
-  //     console.error("Gagal ambil komentar:", err);
-  //     setComments([]);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const fetchComments = async () => {
     try {
       const res = await api.get("/comments");
@@ -43,56 +43,54 @@ export default function ViewKomentarPage() {
     fetchComments();
   }, []);
 
- // Fungsi hapus komentar dengan Bearer Token
-// const handleDelete = async (id: number) => {
-//   const confirmDelete = confirm("Yakin ingin menghapus komentar ini?");
-//   if (!confirmDelete) return;
+  // handleDelete 
+  const handleDelete = (id: number) => {
+    setAlertModal({
+    show: true,
+    title: "Konfirmasi Hapus",
+    message: "Apakah kamu yakin ingin menghapus komentar ini?",
+    onClose: () => setAlertModal((prev) => ({ ...prev, show: false })),
+    showConfirm: true,
+    onConfirm: async () => {
+      // Tutup modal konfirmasi
+      setAlertModal((prev) => ({ ...prev, show: false }));
 
-//   try {
-//     // Ambil token dari localStorage (pastikan kamu simpan di sana saat login)
-//     const token = localStorage.getItem("token");
+        try {
+          await adminApi.delete(`/comments/${id}`);
+          fetchComments();
 
-//     if (!token) {
-//       alert("Token tidak ditemukan. Silakan login ulang.");
-//       return;
-//     }
+          // Tampilkan modal sukses
+          setAlertModal({
+            show: true,
+            title: "Berhasil",
+            message: "Komentar berhasil dihapus!",
+            onClose: () =>
+              setAlertModal((prev) => ({ ...prev, show: false })),
+          });
+        } catch (err) {
+          console.error("Gagal hapus komentar:", err);
 
-//     await axios.delete(`http://127.0.0.1:8000/api/admin/comments/${id}`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         Accept: "application/json",
-//       },
-//     });
-
-//     alert("Komentar berhasil dihapus ✅");
-//     fetchComments(); // Refresh data
-//   } catch (err) {
-//     console.error("Gagal hapus komentar:", err);
-//     alert("Gagal menghapus komentar ❌");
-//   }
-// };
-const handleDelete = async (id: number) => {
-    const confirmDelete = confirm("Yakin ingin menghapus komentar ini?");
-    if (!confirmDelete) return;
-
-    try {
-      await adminApi.delete(`comments/${id}`);
-      alert("Komentar berhasil dihapus");
-      fetchComments();
-    } catch (err) {
-      console.error("Gagal hapus komentar:", err);
-      alert("Gagal menghapus komentar");
-    }
+          // Tampilkan modal error
+          setAlertModal({
+            show: true,
+            title: "Gagal Menghapus",
+            message: "Terjadi kesalahan saat menghapus komentar.",
+            onClose: () =>
+              setAlertModal((prev) => ({ ...prev, show: false })),
+          });
+        }
+      },
+    });
   };
 
 
-  // 🔹 Filter komentar berdasarkan isi atau nama user/blog
-  const filteredComments = comments.filter((c) => {
+  // Filter komentar berdasarkan label
+  const filteredComments = comments.filter((comment) => {
     const search = searchTerm.toLowerCase();
     return (
-      c.user?.name?.toLowerCase().includes(search) ||
-      c.blog?.title?.toLowerCase().includes(search) ||
-      c.content?.toLowerCase().includes(search)
+      comment.user?.name?.toLowerCase().includes(search) ||
+      comment.blog?.title?.toLowerCase().includes(search) ||
+      comment.content?.toLowerCase().includes(search)
     );
   });
 
@@ -112,7 +110,7 @@ const handleDelete = async (id: number) => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Cari komentar, user, atau judul blog..."
+              placeholder="Cari user, komentar, atau judul blog..."
               className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-300"
             />
           </div>
@@ -142,10 +140,10 @@ const handleDelete = async (id: number) => {
                   filteredComments.map((c, i) => (
                     <tr
                       key={c.id}
-                      className="border-b border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
+                      className="border-b border-slate-200 hover:bg-slate-50 text-gray-800 transition-colors"
                     >
                       <td className="px-4 py-3 text-center align-top">{i + 1}</td>
-                      <td className="px-4 py-3 font-medium text-gray-800 align-top">
+                      <td className="px-4 py-3 font-medium align-top">
                         {c.user?.name || "Anonim"}
                       </td>
                       <td className="px-4 py-3 max-w-[280px] whitespace-normal break-words align-top">
@@ -154,15 +152,21 @@ const handleDelete = async (id: number) => {
                       <td className="px-4 py-3 max-w-[300px] align-top">
                         {c.content || "-"}
                       </td>
-                      <td className="px-4 py-3 text-center text-gray-600 align-top">
-                        {c.created_at
-                          ? new Date(c.created_at).toLocaleDateString("id-ID", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
-                          : "-"}
-                      </td>
+                      <td className="px-4 py-3 text-center align-top">
+  {c.created_at
+    ? new Date(c.created_at).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false, 
+        timeZone: "Asia/Jakarta", 
+      })
+    : "-"}
+</td>
+
 
                       {/* 🔹 Tombol aksi */}
                       <td className="px-4 py-3 text-center">
@@ -181,7 +185,7 @@ const handleDelete = async (id: number) => {
                 ) : (
                   <tr>
                     <td colSpan={6} className="text-center py-6 text-gray-500 italic">
-                      Tidak ada komentar ditemukan.
+                      Tidak ada komentar yang ditemukan.
                     </td>
                   </tr>
                 )}
@@ -190,6 +194,14 @@ const handleDelete = async (id: number) => {
           </div>
         </div>
       </main>
+       <AlertComment
+        show={alertModal.show}
+        title={alertModal.title}
+        message={alertModal.message}
+        onClose={alertModal.onClose}
+        showConfirm={alertModal.showConfirm}
+  onConfirm={alertModal.onConfirm}
+      />
     </div>
   );
 }

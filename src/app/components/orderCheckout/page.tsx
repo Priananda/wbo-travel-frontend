@@ -67,7 +67,7 @@ export default function OrderCheckout({
         disabled={checkoutLoading}
         className="mt-8 w-full bg-cyan-700 text-white py-3 rounded-lg font-semibold hover:bg-cyan-800 transition"
       >
-        {checkoutLoading ? "Processing..." : "Place Order"}
+        {checkoutLoading ? "Memproses..." : "Place Order"}
       </button>
 
       {xenditUrl && (
@@ -75,17 +75,24 @@ export default function OrderCheckout({
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className="text-green-600 w-5 h-5" />
             <p className="font-semibold text-green-700">
-              Order berhasil dibuat!
+              Order Paket Tour berhasil dibuat!
             </p>
           </div>
-          <a
+          {/* <a
             href={xenditUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition font-medium"
           >
             Bayar Sekarang
-          </a>
+          </a> */}
+          <button
+  onClick={() => window.location.href = xenditUrl as string}
+  className="inline-block bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition font-medium"
+>
+  Bayar Sekarang
+</button>
+
         </div>
       )}
     </div>

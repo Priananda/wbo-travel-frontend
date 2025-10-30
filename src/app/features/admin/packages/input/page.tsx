@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, DragEvent } from "react";
-import axios from "axios";
-import Sidebar from "@/app/components/admin/sidebar";
+// import Sidebar from "@/app/components/admin/sidebar";
 import { Loader2, Upload } from "lucide-react";
 import { useAuth } from "@/app/services/Auth";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
@@ -194,7 +193,7 @@ export default function InputPaketTourPage() {
   return (
     <ProtectedRoute allowedRoles={["admin"]}>
       <div className="flex">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        {/* <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} /> */}
 
         <main className="flex-1 bg-slate-50 min-h-screen p-6">
           <div className="bg-white p-8 rounded-lg shadow-md border border-slate-200">

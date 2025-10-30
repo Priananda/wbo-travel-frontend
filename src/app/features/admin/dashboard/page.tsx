@@ -22,7 +22,6 @@ export default function AdminDashboard() {
   <h1 className="text-center font-bold text-4xl drop-shadow-xs">
     Selamat Datang {user?.role}
   </h1>
-  <div className="mt-4 w-80 h-1 rounded-full bg-gradient-to-r from-teal-600 to-cyan-700" />
 </div>
 
     </ProtectedRoute>

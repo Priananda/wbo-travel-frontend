@@ -82,7 +82,7 @@ export default function Footer() {
             </li>
             <li>
               <Link href="/packages" className="hover:opacity-80">
-                Bali Tour Packages
+                Bali Paket Tour
               </Link>
             </li>
             <li>
@@ -101,7 +101,7 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/blog" className="hover:opacity-80">
+              <Link href="/blogs" className="hover:opacity-80">
                 Blog
               </Link>
             </li>

@@ -103,45 +103,36 @@ export default function Header({ onToggleSidebar, isDarkMode, onToggleDarkMode }
             </button> */}
 
             {/* Profile */}
-            <div
-              className="flex items-center space-x-2 relative cursor-pointer"
-              onClick={() => setShowProfileMenu((prev) => !prev)}
-              ref={profileRef}
-            >
-              {loading ? (
-                <span className="text-sm text-gray-500">Loading...</span>
-              ) : me ? (
-                <>
-                  {me.avatar_url ? (
-                    <Image
-                      src={me.avatar_url}
-                      alt="Avatar"
-                      width={32}
-                      height={32}
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600" />
-                  )}
-                  <span className="text-sm font-medium text-black dark:text-gray-200">
-                    {me.name}
-                  </span>
+           <div
+  className="flex items-center space-x-2 relative cursor-pointer"
+  onClick={() => setShowProfileMenu((prev) => !prev)}
+  ref={profileRef}
+>
+  {loading ? (
+    <span className="text-sm text-gray-500">Loading...</span>
+  ) : me ? (
+    <>
+      {/* Hapus avatar & background gray */}
+      <span className="text-md font-medium text-black dark:text-gray-200">
+        {me.name}
+      </span>
 
-                  {showProfileMenu && (
-                    <div className="absolute right-0 mt-28 w-40 py-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg z-50">
-                      <button
-                        onClick={handleSignOut}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-700 rounded-md"
-                      >
-                        Sign Out
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <span className="text-sm text-red-500">User not found</span>
-              )}
-            </div>
+      {showProfileMenu && (
+        <div className="absolute right-0 mt-24 w-40 py-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg z-50">
+          <button
+            onClick={handleSignOut}
+            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-700 rounded-md"
+          >
+            Sign Out
+          </button>
+        </div>
+      )}
+    </>
+  ) : (
+    <span className="text-sm text-red-500">User not found</span>
+  )}
+</div>
+
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ interface PaketCardProps {
 export default function PaketCard({ paket }: PaketCardProps) {
   return (
     <div
-      className={`flex flex-col md:flex-row p-2 bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300 ${hkGrotesk.className}`}
+      className={`flex flex-col md:flex-row p-2 bg-white border border-cyan-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300 ${hkGrotesk.className}`}
     >
       {/* Gambar */}
       <div className="relative w-full md:w-1/2 h-56 flex-shrink-0">

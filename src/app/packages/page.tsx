@@ -14,6 +14,7 @@ import WhatsAppButton from "@/app/components/waButton/page";
 import Footer from "@/app/components/footer/index";
 import { api } from "@/app/api/api";
 
+
 interface PaketTour {
   id: number;
   title: string;
@@ -33,17 +34,25 @@ export default function PaketTourPage() {
   const [sort, setSort] = useState("default");
   const [totalItems, setTotalItems] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const perPage = 8;
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // const updateUrlParams = (newPage: number, newSort: string) => {
+  //   const params = new URLSearchParams();
+  //   params.set("page", newPage.toString());
+  //   params.set("sort", newSort);
+  //   router.replace(`/packages?${params.toString()}`);
+  // };
   const updateUrlParams = (newPage: number, newSort: string) => {
-    const params = new URLSearchParams();
-    params.set("page", newPage.toString());
-    params.set("sort", newSort);
-    router.replace(`/packages?${params.toString()}`);
-  };
+  const params = new URLSearchParams();
+  params.set("page", newPage.toString());
+  params.set("sort", newSort);
+  router.push(`/packages?${params.toString()}`, { scroll: false });
+};
+
 
   const sortOptions = [
     { value: "default", label: "Default sorting" },
@@ -53,6 +62,7 @@ export default function PaketTourPage() {
   ];
 
   const fetchPackages = async () => {
+    setLoading(true);
     try {
       const res = await api.get("/paket-tours", {
         params: { page, per_page: perPage, sort },
@@ -66,15 +76,23 @@ export default function PaketTourPage() {
     } catch (err) {
       console.error(err);
       setPackages([]);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // useEffect(() => {
+  //   const urlPage = Number(searchParams.get("page")) || 1;
+  //   const urlSort = searchParams.get("sort") || "default";
+  //   setPage(urlPage);
+  //   setSort(urlSort);
+  // }, []);
   useEffect(() => {
-    const urlPage = Number(searchParams.get("page")) || 1;
-    const urlSort = searchParams.get("sort") || "default";
-    setPage(urlPage);
-    setSort(urlSort);
-  }, []);
+  const urlPage = Number(searchParams.get("page")) || 1;
+  const urlSort = searchParams.get("sort") || "default";
+  setPage(urlPage);
+  setSort(urlSort);
+}, [searchParams]);
 
   useEffect(() => {
     updateUrlParams(page, sort);
@@ -85,145 +103,161 @@ export default function PaketTourPage() {
     dayjs().diff(dayjs(created_at), "day") < 7;
 
   return (
-    <div className="">
-      <div className="px-3 md:px-3 lg:px-0 max-w-6xl mx-auto py-10 relative animate-[fadeIn_.6s_ease-in-out]">
-        <div className="absolute top-0 left-0 w-full z-50">
-          <Navbar />
-        </div>
+      <div>
+      {/* Navbar tetap di atas */}
+      <div className="absolute top-0 left-0 w-full z-50">
+        <Navbar />
+      </div>
 
-        <h2 className={`mt-32 mb-4 text-3xl md:text-4xl font-semibold text-black drop-shadow-sm ${hkGrotesk.className}`}>
+      <div className="px-3 md:px-3 lg:px-0 max-w-6xl mx-auto py-10 relative animate-[fadeIn_.6s_ease-in-out]">
+        <h2
+          className={`mt-32 mb-4 text-3xl md:text-4xl font-semibold text-black drop-shadow-sm ${hkGrotesk.className}`}
+        >
           Paket Bali Tour
         </h2>
 
-        {/* Top Bar */}
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-10 text-md text-gray-800 gap-4 md:gap-0">
-          <p className="text-lg">
-            Showing {(page - 1) * perPage + 1}–
-            {Math.min(page * perPage, totalItems)} of {totalItems} results
-          </p>
+        {/*  LOADING INDICATOR */}
+        {loading ? (
+        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+  {/* Tailwind spinner */}
+  <div className="w-8 h-8 border-4 border-t-cyan-700 border-gray-200 rounded-full animate-spin"></div>
 
-          <div className="relative">
-            <button
-              className="flex items-center gap-2 border border-teal-700 px-5 py-3 rounded-full shadow-md bg-white hover:bg-teal-50 cursor-pointer transition"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              {sortOptions.find((o) => o.value === sort)?.label}
-              <ChevronDown className="w-5 h-5 mt-1" />
-            </button>
+  <p className="mt-4 text-cyan-700 text-md">
+    Memuat data paket tour...
+  </p>
+</div>
 
-            {dropdownOpen && (
-              <ul className="absolute text-md right-0 mt-1 w-56 bg-white border border-slate-200 shadow-lg rounded-md z-50 animate-[fadeIn_.3s_ease]">
-                {sortOptions.map((option) => (
-                  <li
-                    key={option.value}
-                    className={`px-4 py-2 cursor-pointer transition-all hover:bg-cyan-50 ${
-                      sort === option.value ? "bg-cyan-100 font-semibold" : ""
-                    }`}
-                    onClick={() => {
-                      setSort(option.value);
-                      setPage(1);
-                      setDropdownOpen(false);
-                    }}
-                  >
-                    {option.label}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+        ) : (
+          <>
+            {/* Top Bar */}
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-10 text-md text-gray-800 gap-4 md:gap-0">
+              <p className="text-lg">
+                Showing {(page - 1) * perPage + 1}–
+                {Math.min(page * perPage, totalItems)} of {totalItems} results
+              </p>
 
-        {/* Grid Paket */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-[fadeInUp_.6s_ease]">
-          {packages.map((pkg) => (
-            <div
-              key={pkg.id}
-              className={`flex flex-col bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${hkGrotesk.className}`}
-            >
-              <div className="relative w-full h-56 overflow-hidden">
-                <Image
-                  src={`http://127.0.0.1:8000/storage/${pkg.image}`}
-                  alt={pkg.title}
-                  fill
-                  className="object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-105"
-                />
+              <div className="relative">
+                <button
+                  className="flex items-center gap-2 border border-teal-700 px-5 py-3 rounded-full shadow-md bg-white hover:bg-teal-50 cursor-pointer transition"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                >
+                  {sortOptions.find((o) => o.value === sort)?.label}
+                  <ChevronDown className="w-5 h-5 mt-1" />
+                </button>
 
-                <div className="absolute bottom-2 left-2 px-3 py-2 bg-cyan-50 text-cyan-700 text-sm font-semibold rounded-md shadow-sm">
-                  {pkg.duration_days ?? "-"} Hari {pkg.duration_nights ?? "-"} Malam
-                </div>
-
-                {isFeatured(pkg.created_at) && (
-                  <span className="absolute top-4 left-4 bg-red-500 text-white text-sm font-semibold px-3 py-2 rounded-md animate-pulse">
-                    Featured
-                  </span>
+                {dropdownOpen && (
+                  <ul className="absolute text-md right-0 mt-1 w-56 bg-white border border-slate-200 shadow-lg rounded-md z-50 animate-[fadeIn_.3s_ease]">
+                    {sortOptions.map((option) => (
+                      <li
+                        key={option.value}
+                        className={`px-4 py-2 cursor-pointer transition-all hover:bg-cyan-50 ${
+                          sort === option.value ? "bg-cyan-100 font-semibold" : ""
+                        }`}
+                        onClick={() => {
+                          setSort(option.value);
+                          setPage(1);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        {option.label}
+                      </li>
+                    ))}
+                  </ul>
                 )}
-
-                <div className="absolute top-2 right-2">
-                  <FavoriteButton paketId={pkg.id} />
-                </div>
-              </div>
-
-              <div className="p-5 mt-2 flex flex-col flex-grow justify-between">
-                <h3 className="text-xl font-semibold text-gray-900 hover:text-teal-700 transition cursor-pointer leading-snug mb-3 drop-shadow-xs">
-                  {pkg.title}
-                </h3>
-
-                <p className="text-sm text-gray-900 leading-snug font-medium mb-3 line-clamp-3">
-                  {pkg.description || "........"}
-                </p>
-
-                <div className="mt-3 flex items-center justify-between">
-                  <p className="text-lg font-bold text-gray-900 drop-shadow-xs">
-                    Rp{Number(pkg.price).toLocaleString("id-ID")}
-                  </p>
-                  <Link
-                    href={`/packages/${pkg.slug}?page=${page}&sort=${sort}`}
-                    className="inline-block bg-cyan-700 hover:bg-cyan-800 text-white px-6 py-2 rounded-lg shadow-sm transition-all duration-300 font-medium"
-                  >
-                    Explore
-                  </Link>
-                </div>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Pagination */}
-        <div className="flex justify-center mt-10 space-x-3 py-2 rounded-full border-2 border-slate-400 w-full max-w-xs mx-auto shadow shadow-teal-700/50 animate-[fadeIn_.5s_ease]">
-          {page > 1 && (
-            <button
-              onClick={() => setPage(page - 1)}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer transition"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-          )}
+            {/* Grid Paket */}
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-[fadeInUp_.6s_ease]">
+              {packages.map((pkg) => (
+                <div
+                  key={pkg.id}
+                  className={`flex flex-col bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${hkGrotesk.className}`}
+                >
+                  <div className="relative w-full h-56 overflow-hidden">
+                    <Image
+                      src={`http://127.0.0.1:8000/storage/${pkg.image}`}
+                      alt={pkg.title}
+                      fill
+                      className="object-cover transform transition-transform duration-500 ease-in-out group-hover:scale-105"
+                    />
+                    <div className="absolute bottom-2 left-2 px-3 py-2 bg-cyan-50 text-cyan-700 text-sm font-semibold rounded-md shadow-sm">
+                      {pkg.duration_days ?? "-"} Hari {pkg.duration_nights ?? "-"} Malam
+                    </div>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .filter((p) => Math.abs(p - page) <= 2)
-            .map((p) => (
-              <button
-                key={p}
-                onClick={() => setPage(p)}
-                className={`px-4 py-2 rounded-md cursor-pointer transition ${
-                  p === page
-                    ? "bg-gradient-to-r from-teal-600 to-cyan-700 text-white"
-                    : "bg-slate-200 hover:bg-slate-300 text-black"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
+                    {isFeatured(pkg.created_at) && (
+                      <span className="absolute top-4 left-4 bg-red-500 text-white text-sm font-semibold px-3 py-2 rounded-md animate-pulse">
+                        Featured
+                      </span>
+                    )}
+                    <div className="absolute top-2 right-2">
+                      <FavoriteButton/>
+                    </div>
+                  </div>
 
-          {page < totalPages && (
-            <button
-              onClick={() => setPage(page + 1)}
-              className="px-4 py-2 bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer transition"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+                  <div className="p-5 mt-2 flex flex-col flex-grow justify-between">
+                    <h3 className="text-xl font-semibold text-gray-900 hover:text-teal-700 transition cursor-pointer leading-snug mb-3 drop-shadow-xs">
+                      {pkg.title}
+                    </h3>
+
+                    <p className="text-sm text-gray-900 leading-snug font-medium mb-3 line-clamp-3">
+                      {pkg.description || "........"}
+                    </p>
+
+                    <div className="mt-3 flex items-center justify-between">
+                      <p className="text-lg font-bold text-gray-900 drop-shadow-xs">
+                        Rp{Number(pkg.price).toLocaleString("id-ID")}
+                      </p>
+                      <Link
+                        href={`/packages/${pkg.slug}?page=${page}&sort=${sort}`}
+                        className="inline-block bg-cyan-700 hover:bg-cyan-800 text-white px-6 py-2 rounded-lg shadow-sm transition-all duration-300 font-medium"
+                      >
+                        Explore
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-10 space-x-3 py-2 rounded-full border-2 border-slate-400 w-full max-w-xs mx-auto shadow shadow-teal-700/50 animate-[fadeIn_.5s_ease]">
+              {page > 1 && (
+                <button
+                  onClick={() => setPage(page - 1)}
+                  className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer transition"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+              )}
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((p) => Math.abs(p - page) <= 2)
+                .map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`px-4 py-2 rounded-md cursor-pointer transition ${
+                      p === page
+                        ? "bg-cyan-700 text-white"
+                        : "bg-slate-200 hover:bg-slate-300 text-black"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+
+              {page < totalPages && (
+                <button
+                  onClick={() => setPage(page + 1)}
+                  className="px-4 py-2 bg-slate-200 rounded-md hover:bg-slate-300 cursor-pointer transition"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </>
+        )}
 
         <WhatsAppButton />
       </div>
