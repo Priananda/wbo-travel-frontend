@@ -30,6 +30,7 @@ interface Order {
   status: string;
   total_price: string;
   created_at: string;
+  payment_status?: string;
   items: OrderItem[];
   
 }
@@ -58,7 +59,7 @@ export default function CartViewPage() {
     try {
       const res = await adminApi.get(`/orders?page=${page}`);
 
-      const formattedOrders = res.data.orders.map((order: any) => ({
+      const formattedOrders = res.data.orders.map((order: Order) => ({
         ...order,
         status: order.payment_status || order.status,
       }));
@@ -96,6 +97,8 @@ export default function CartViewPage() {
           Daftar Pesanan Paket Tour
         </h1>
 
+        
+
         {/* Summary cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
@@ -129,8 +132,9 @@ export default function CartViewPage() {
               <Loader2 className="animate-spin text-cyan-700" size={30} />
             </div>
           ) : (
-            <table className="min-w-full table-auto text-sm">
-              <thead className="bg-cyan-800 text-white">
+           
+                  <table className="min-w-full table-auto text-sm text-gray-700 border-collapse">
+            <thead className="text-xs uppercase bg-cyan-800 text-white">
                 <tr>
                   <th className="px-4 py-3 text-left">Kode Order</th>
                   <th className="px-4 py-3 text-left">Nama & Paket</th>

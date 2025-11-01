@@ -16,10 +16,10 @@ export default function TopContactBar({ scrolled }: TopContactBarProps) {
           : "top-[10px] opacity-100 translate-y-0"
       }`}
     >
-      {/* 🔹 Wrapper dengan gradient cross-platform */}
+      {/* Wrapper dengan gradient cross-platform */}
       <div className="py-2 px-6 text-white text-[15px] font-medium flex items-center justify-between bg-gradient-to-r from-teal-600 to-cyan-700 hover:from-teal-700 hover:to-cyan-600 ios:bg-gradient-to-r ios:from-teal-600 ios:to-cyan-700 android:bg-gradient-to-r android:from-teal-600 android:to-cyan-700">
         
-        {/* 🔹 Kontak utama */}
+        {/* Kontak utama */}
         <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 text-white">
           {/* Email */}
           <Link
@@ -51,7 +51,7 @@ export default function TopContactBar({ scrolled }: TopContactBarProps) {
           </Link>
         </div>
 
-        {/* 🔹 Sosial Media */}
+        {/* Sosial Media */}
         <div className="flex items-center space-x-4">
           {/* Facebook */}
           <Link

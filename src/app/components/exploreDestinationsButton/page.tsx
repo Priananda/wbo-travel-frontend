@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 interface GradientButtonProps {
-  href?: string; // opsional → bisa pakai Link atau button biasa
+  href?: string;
   label: string;
   className?: string;
   onClick?: () => void;

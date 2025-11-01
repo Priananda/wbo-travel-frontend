@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
-const BACKEND_BASE =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || `${BACKEND_BASE}/api`;
+const BACKEND_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+const API_BASE = `${BACKEND_BASE}/api`;
 
 // publik endpoint
 export const api = axios.create({
@@ -25,7 +24,6 @@ const attachAuthInterceptor = (instance: AxiosInstance) => {
     return config;
   });
 };
-
 attachAuthInterceptor(api);
 
 // API User

@@ -53,7 +53,7 @@ export default function CartPage() {
   // if (loadingCart) return <Loading />;
 
   return (
-    <div className="max-w-[94%] mx-auto p-6 relative">
+    <div className="max-w-[100%] md:max-w-[100%] lg:max-w-[94%]  mx-auto p-6 relative">
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar />
       </div>

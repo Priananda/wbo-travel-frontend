@@ -167,13 +167,13 @@ const deskripsiKhusus =
 <div
   className={`bg-white rounded-xl shadow-md border border-gray-300 p-6 flex flex-col justify-between ${hkGrotesk.className}`}
 >
-  {/* 🔹 Judul & Harga */}
+  {/* Judul & Harga */}
   <div>
     <h1 className="text-3xl font-semibold text-gray-900 mb-3">
       {paket.title}
     </h1>
 
-    {/* 🔹 Label "From" + Harga */}
+    {/* Label "From" + Harga */}
     <div className="text-start mb-6">
       <div className="flex text-lg gap-2 mb-2">
         <Tag className="w-6 h-6 text-red-500" />
@@ -184,20 +184,20 @@ const deskripsiKhusus =
         Rp{Number(paket.price).toLocaleString("id-ID")}
       </p>
 
-      {/* 🔹 Garis putus-putus + pesawat */}
+      {/* Garis putus-putus + pesawat */}
       <div className="relative flex items-center justify-center">
         <div className="w-full border-t-2 border-dashed border-cyan-700"></div>
         <Plane className="absolute  text-cyan-700 w-8 h-8 bg-white px-1" />
       </div>
     </div>
 
-    {/* 🔹 Deskripsi */}
+    {/* Deskripsi */}
     <p className="text-gray-800 text-md leading-relaxed font-medium mb-4">
       {paket.description}
     </p>
   </div>
 
-  {/* 🔹 Tombol AddToCart */}
+  {/* Tombol AddToCart */}
   <AddToCart
     paketId={paket.id}
     title={paket.title}
@@ -212,6 +212,10 @@ const deskripsiKhusus =
     </div>
   );
 }
+
+
+
+
 
 
 /* === COMPONENT DESKRIPSI TAMBAHAN === */
@@ -3977,7 +3981,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
     />
   </div>
 
-  {/* 🔹 Deskripsi Umum */}
+  {/* Deskripsi Umum */}
   <section className="bg-white shadow-md border border-gray-100 rounded-2xl p-8">
     <h2 className="text-2xl font-bold text-cyan-800 mb-4 flex items-center gap-2">
       <Info className="text-cyan-700 w-6 h-6" /> Deskripsi Paket
@@ -3987,7 +3991,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
     </p>
   </section>
 
-  {/* 🔹 Peserta */}
+  {/* Peserta */}
   <section className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
     <h2 className="text-xl font-semibold text-cyan-800 mb-4 flex items-center gap-2">
       <Users className="text-cyan-700 w-6 h-6" /> Peserta
@@ -4001,7 +4005,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
     </ul>
   </section>
 
-  {/* 🔹 Pembayaran */}
+  {/*  Pembayaran */}
   <section className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
     <h2 className="text-xl font-semibold text-cyan-800 mb-4 flex items-center gap-2">
       <CreditCard className="text-cyan-700 w-6 h-6" /> Pembayaran
@@ -4014,7 +4018,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
     </ul>
   </section>
 
-  {/* 🔹 Pembatalan */}
+  {/* Pembatalan */}
   <section className="bg-gradient-to-r from-red-50 to-rose-50 border border-red-100 rounded-2xl shadow-sm p-8">
     <h2 className="text-xl font-semibold text-red-600 mb-4 flex items-center gap-2">
       <XCircle className="text-red-500 w-6 h-6" /> Pembatalan
@@ -4025,7 +4029,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
     </ul>
   </section>
 
-  {/* 🔹 Pilihan Hotel */}
+  {/* Pilihan Hotel */}
   <section className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
     <h2 className="text-xl font-semibold text-cyan-800 mb-4 flex items-center gap-2">
       <MapPin className="text-cyan-700 w-6 h-6" /> Pilihan Hotel
@@ -4044,7 +4048,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
     </div>
   </section>
 
-  {/* 🔹 Included / Excluded */}
+  {/* Included / Excluded */}
   <section>
     <h2 className="text-2xl font-bold text-cyan-800 mb-6 flex items-center gap-2">
       <CheckCircle className="text-green-600 w-6 h-6" /> Included / Excluded
@@ -4091,7 +4095,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
     </div>
   </section>
 
-  {/* 🔹 Tour Plan */}
+  {/* Tour Plan */}
   <section>
     <h3 className="text-3xl font-bold text-cyan-800 mt-8 mb-6 flex items-center gap-2">
       <MapIcon className="text-cyan-700 w-7 h-7" /> Tour Plan
@@ -4155,7 +4159,7 @@ function DeskripsiU({ paket }: { paket: PaketTourDetail }) {
 
 
 
-// 🔸 Komponen kecil untuk info
+// Komponen kecil untuk info
 function InfoItem({
   icon,
   title,
