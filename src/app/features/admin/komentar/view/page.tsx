@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { Trash2, Loader2, Search } from "lucide-react";
 import { api, adminApi  } from "@/app/api/api";
 import AlertComment from "@/app/components/userAdminModal/page";
+import ProtectedRoute from "@/app/middleware/ProtectedRoute";
+import { hkGrotesk } from "@/app/fonts/fonts";
+
 interface Comment {
   id: number;
   blog?: { title?: string };
@@ -95,15 +98,13 @@ export default function ViewKomentarPage() {
   });
 
   return (
-    <div className="flex">
+    <ProtectedRoute allowedRoles={["admin"]}>
+          <div className={`p-4 ${hkGrotesk.className}`}>
+      <div className="p-6 bg-white rounded-xl shadow-sm">
+        <h1 className="text-2xl font-semibold mb-6 text-gray-800"> Komentar User</h1>
 
-      <main className="flex-1 p-1 bg-gray-50 min-h-screen">
-        <div className="px-4 mt-4">
-          <h1 className="text-2xl font-semibold mb-6 drop-shadow-xs">
-            Komentar User
-          </h1>
 
-          {/* 🔍 Input pencarian */}
+          {/* Input pencarian */}
           <div className="relative mb-4 w-full max-w-md">
             <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
             <input
@@ -115,7 +116,7 @@ export default function ViewKomentarPage() {
             />
           </div>
 
-          {/* 🔹 Tabel Komentar */}
+          {/* Tabel Komentar */}
           <div className="bg-white rounded-md shadow-md overflow-hidden overflow-x-auto border border-slate-200 scroll-hidden">
             <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
               <thead className="text-xs uppercase bg-cyan-800 text-white">
@@ -192,8 +193,7 @@ export default function ViewKomentarPage() {
               </tbody>
             </table>
           </div>
-        </div>
-      </main>
+      </div>
        <AlertComment
         show={alertModal.show}
         title={alertModal.title}
@@ -203,5 +203,6 @@ export default function ViewKomentarPage() {
   onConfirm={alertModal.onConfirm}
       />
     </div>
+    </ProtectedRoute>
   );
 }

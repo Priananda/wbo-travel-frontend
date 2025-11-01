@@ -26,20 +26,21 @@ export default function BillingFormCheckout({ billing, handleInputChange }: Prop
       <h2 className="text-xl font-bold mb-6 drop-shadow-xs">Detail Billing</h2>
 
       {/* Data Umum */}
-      {["name", "address", "phone", "email"].map((field) => (
-        <label className="block mb-3" key={field}>
-          <span className="text-gray-800 font-medium capitalize">
-            {field} <span className="text-red-500">*</span>
-          </span>
-          <input
-            type={field === "email" ? "email" : "text"}
-            name={field}
-            value={(billing as any)[field]}
-            onChange={handleInputChange}
-            className="mt-2 px-4 py-2 w-full border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-300"
-          />
-        </label>
-      ))}
+      {(["name", "address", "phone", "email"] as const).map((field) => (
+  <label className="block mb-3" key={field}>
+    <span className="text-gray-800 font-medium capitalize">
+      {field} <span className="text-red-500">*</span>
+    </span>
+    <input
+      type={field === "email" ? "email" : "text"}
+      name={field}
+      value={billing[field]}
+      onChange={handleInputChange}
+      className="mt-2 px-4 py-2 w-full border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-300"
+    />
+  </label>
+))}
+
 
       {/* Check In / Out */}
       <div className="grid grid-cols-2 gap-4">
@@ -88,7 +89,7 @@ export default function BillingFormCheckout({ billing, handleInputChange }: Prop
       {/* Catatan Tambahan */}
       <label className="block mb-3">
         <span className="text-gray-800 font-medium">
-          Extra Information <span className="text-red-500">*</span>
+          Extra Information <span className="">(Opsional)</span>
         </span>
         <textarea
           name="extra_info"
@@ -96,7 +97,7 @@ export default function BillingFormCheckout({ billing, handleInputChange }: Prop
           onChange={handleInputChange}
           className="mt-2 px-4 py-2 w-full border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-300"
           rows={3}
-          placeholder="Tambahkan catatan (opsional)"
+          placeholder="Tambahkan catatan"
         />
       </label>
     </div>

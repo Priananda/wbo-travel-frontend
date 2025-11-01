@@ -52,9 +52,26 @@ export default function CheckoutPage() {
   // const validateBilling = () => {
   //   return Object.values(billing).every((v) => v.trim() !== "");
   // };
-  const validateBilling = () => {
-  const requiredFields = ["name", "email", "phone", "address", "check_in", "check_out", "guest"];
-  return requiredFields.every((key) => (billing as any)[key]?.toString().trim() !== "");
+//   const validateBilling = () => {
+//   const requiredFields = ["name", "email", "phone", "address", "check_in", "check_out", "guest"];
+//   return requiredFields.every((key) => (billing as any)[key]?.toString().trim() !== "");
+// };
+const validateBilling = () => {
+  const requiredFields: (keyof typeof billing)[] = [
+    "name",
+    "email",
+    "phone",
+    "address",
+    "check_in",
+    "check_out",
+    "guest",
+    "extra_info",
+  ];
+
+  return requiredFields.every((key) => {
+    const value = billing[key];
+    return value !== undefined && value.toString().trim() !== "";
+  });
 };
 
 

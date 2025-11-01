@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { hkGrotesk } from "@/app/fonts/fonts";
 
 export default function FavoriteButton() {
   const [likedPackages, setLikedPackages] = useState(false);

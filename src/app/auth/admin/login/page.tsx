@@ -108,23 +108,23 @@ export default function AdminLoginPage() {
   };
 
   // Google login handler
-  const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
-    if (!credentialResponse.credential) return;
-    setLoading(true);
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/api/auth/google", {
-        token: credentialResponse.credential,
-      });
+  // const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
+  //   if (!credentialResponse.credential) return;
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.post("http://127.0.0.1:8000/api/auth/google", {
+  //       token: credentialResponse.credential,
+  //     });
 
-      localStorage.setItem("token", res.data.token);
-      setUser(res.data.user);
-      router.push("/features/admin/dashboard");
-    } catch (err) {
-      console.error("Login Google gagal:", err);
-      setErrorAuth("Login melalui Google gagal. Coba lagi.");
-      setLoading(false);
-    }
-  };
+  //     localStorage.setItem("token", res.data.token);
+  //     setUser(res.data.user);
+  //     router.push("/features/admin/dashboard");
+  //   } catch (err) {
+  //     console.error("Login Google gagal:", err);
+  //     setErrorAuth("Login melalui Google gagal. Coba lagi.");
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div

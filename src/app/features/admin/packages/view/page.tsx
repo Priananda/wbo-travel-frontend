@@ -9,6 +9,7 @@ import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 import Image from "next/image";
 import { adminApi } from "@/app/api/api";
 import AlertPackages from "@/app/components/userAdminModal/page";
+import { hkGrotesk } from "@/app/fonts/fonts";
 
 interface AlertModalState {
   show: boolean;
@@ -240,7 +241,8 @@ if (newImage) {
 
   return (
     <ProtectedRoute allowedRoles={["admin"]}>
-      <div className="p-6 bg-white rounded-xl shadow-sm">
+      <div className={`p-4 ${hkGrotesk.className}`}>
+      <div className="px-1 bg-white ">
         <h1 className="text-2xl font-semibold mb-6 text-gray-800 drop-shadow-xs">
           Daftar Paket Tour
         </h1>
@@ -259,20 +261,21 @@ if (newImage) {
               <Loader2 className="animate-spin text-cyan-700" size={30} />
             </div>
           ) : (
-            <table className="min-w-full table-auto text-sm text-gray-800">
-              <thead className="bg-cyan-800 text-white">
+
+          <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
+            <thead className="text-xs uppercase bg-cyan-800 text-white">
                 <tr>
                   <th className="px-4 py-3 text-left">No</th>
-                  <th className="px-4 py-3 text-left">Judul</th>
-                  <th className="px-4 py-3 text-left">Slug</th>
-                  <th className="px-4 py-3 text-left">Deskripsi</th>
-                  <th className="px-4 py-3 text-left">Lokasi</th>
-                  <th className="px-4 py-3 text-left">Durasi</th>
-                  <th className="px-4 py-3 text-left">Harga</th>
-                  <th className="px-4 py-3 text-center">Tanggal</th>
-                  <th className="px-4 py-3 text-center">Status</th>
-                  <th className="px-4 py-3 text-center">Gambar</th>
-                  <th className="px-4 py-3 text-center">Aksi</th>
+                  <th className="px-4 py-3 text-left">JUDUL</th>
+                  <th className="px-4 py-3 text-left">SLUG</th>
+                  <th className="px-4 py-3 text-left">DESKRIPSI</th>
+                  <th className="px-4 py-3 text-left">LOKASI</th>
+                  <th className="px-4 py-3 text-left">DURASI</th>
+                  <th className="px-4 py-3 text-left">HARGA</th>
+                  <th className="px-4 py-3 text-center">TANGGAL</th>
+                  <th className="px-4 py-3 text-center">STATUS</th>
+                  <th className="px-4 py-3 text-center">GAMBAR</th>
+                  <th className="px-4 py-3 text-center">AKSI</th>
                 </tr>
               </thead>
 
@@ -374,6 +377,7 @@ if (newImage) {
           )}
         </div>
       </div>
+      </div>
 
       {/* Modal Edit */}
       <AnimatePresence>
@@ -395,7 +399,7 @@ if (newImage) {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
       >
-        <div className="bg-white mt-[800px] rounded-2xl shadow-md border border-gray-200 w-full max-w-4xl p-6 relative">
+        <div className="bg-white mt-[280%] md:mt-[250px] lg:mt-[800px] rounded-2xl shadow-md border border-gray-200 w-full max-w-4xl p-6 relative">
           {/* Tombol close */}
           <button
             onClick={() => setEditing(null)}

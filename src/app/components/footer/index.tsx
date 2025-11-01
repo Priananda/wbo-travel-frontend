@@ -174,7 +174,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ☎️ Kolom 4 - Contact Info */}
+        {/* Kolom 4 - Contact Info */}
         <div>
           <h4 className="mb-4 text-lg font-semibold">Contact Info</h4>
           <ul className="space-y-4 text-sm sm:text-base">

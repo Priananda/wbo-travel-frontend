@@ -37,11 +37,11 @@ export default function WhyChooseUs() {
   }, []);
 
   return (
-   <section className="bg-white py-20 px-4 relative">
+   <section className="bg-white py-20 px-4 relative -mt-10">
   <div className="max-w-6xl mx-auto text-center">
     {/* Judul Section */}
- <div className="flex flex-col items-center justify-center mb-6 md:flex-row">
-        <div className="w-20 h-1 bg-cyan-700 rounded-full mb-3 md:mb-0 md:mr-4"></div>
+ <div className="flex flex-col items-center justify-center mt-6 mb-6 md:flex-row">
+        <div className="w-20 h-1 bg-cyan-700 rounded-full md:mt-0 -mt-7 mb-7 md:mb-0 md:mr-4"></div>
         <h2
           className={`text-3xl md:text-4xl text-black drop-shadow-sm font-semibold text-center md:text-left ${hkGrotesk.className}`}
         >

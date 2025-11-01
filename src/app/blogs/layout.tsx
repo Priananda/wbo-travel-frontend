@@ -111,9 +111,13 @@ export default function BlogLayout({ children }: { children: ReactNode }) {
       <li key={comment.id} className="flex items-start gap-2">
         <MessageCircle className="w-4 h-4 text-cyan-700 mt-1" />
         <div>
-          <p className="text-gray-800 italic text-sm">
+          {/* <p className="text-gray-800 italic text-sm">
             "{comment.content.slice(0, 40)}..."
+          </p> */}
+          <p className="text-gray-800 italic text-sm">
+            &quot;{comment.content.slice(0, 40)}...&quot;
           </p>
+
           <a
             href={`/blogs/${comment.blog_slug}`}
             className="text-cyan-700 hover:underline text-xs"

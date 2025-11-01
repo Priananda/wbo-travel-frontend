@@ -9,6 +9,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { adminApi } from "@/app/api/api";
 import AlertBlogs from "@/app/components/userAdminModal/page";
+import { hkGrotesk } from "@/app/fonts/fonts";
 
 interface Blog {
   id: number;
@@ -176,10 +177,11 @@ export default function ViewBlogPage() {
 
   return (
     <ProtectedRoute allowedRoles={["admin"]}>
-      <main className="p-6 bg-white rounded-xl shadow-sm">
+      <div className={`p-4 ${hkGrotesk.className}`}>
+      <div className="p-6 bg-white rounded-xl shadow-sm">
         <h1 className="text-2xl font-semibold mb-6 text-gray-800">View Blog</h1>
 
-        {/* 🔍 Search Bar */}
+        {/* Search Bar */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
           <input
@@ -191,7 +193,7 @@ export default function ViewBlogPage() {
           />
         </div>
 
-        {/* 📋 Tabel Data */}
+        {/* Tabel Data */}
         <div className="bg-white rounded-md shadow-md overflow-x-auto border border-slate-200">
           <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
             <thead className="text-xs uppercase bg-cyan-800 text-white">
@@ -293,7 +295,8 @@ export default function ViewBlogPage() {
             </tbody>
           </table>
         </div>
-      </main>
+      </div>
+      </div>
 
       {/* ✏️ Modal Edit */}
       <AnimatePresence>
@@ -313,7 +316,7 @@ export default function ViewBlogPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
             >
-              <div className="bg-white rounded-2xl shadow-md border border-gray-200 w-full max-w-4xl p-6 relative">
+              <div className="bg-white mt-[300px] md:mt-[0px] lg:mt-[70px] rounded-2xl shadow-md border border-gray-200 w-full max-w-4xl p-6 relative">
                 <button
                   onClick={() => setEditBlog(null)}
                   className="absolute top-3 right-3 text-gray-500 hover:text-red-500"

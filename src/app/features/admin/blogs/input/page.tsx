@@ -6,6 +6,19 @@ import { Loader2, Upload } from "lucide-react";
 import { useAuth } from "@/app/services/Auth";
 import ProtectedRoute from "@/app/middleware/ProtectedRoute";
 import { adminApi } from "@/app/api/api";
+import AlertInputBlogs from "@/app/components/userAdminModal/page";
+import { useRouter } from "next/navigation";
+import Loading from "@/app/components/loading/index";
+import { hkGrotesk } from "@/app/fonts/fonts";
+
+interface AlertModalState {
+  show: boolean;
+  title: string;
+  message: string;
+  onClose: () => void;
+  showConfirm?: boolean; // tombol "Iya / Tidak"
+  onConfirm?: () => void; // aksi kalau klik "Iya"
+}
 interface BlogFormData {
   title: string;
   slug: string;
@@ -16,11 +29,12 @@ interface BlogFormData {
 }
 
 export default function InputBlogPage() {
+  const router = useRouter();
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [showModalLoading, setShowModalLoading] = useState(false);
   const [formData, setFormData] = useState<BlogFormData>({
     title: "",
     slug: "",
@@ -29,6 +43,8 @@ export default function InputBlogPage() {
     content: "",
     image: null,
   });
+  const [alertModal, setAlertModal] = useState<AlertModalState>({ show: false, title: "", message: "", onClose: () => {},});
+  
 
   //  Fungsi bantu: ubah title jadi slug otomatis
   const generateSlug = (text: string) =>
@@ -104,9 +120,16 @@ export default function InputBlogPage() {
     e.preventDefault();
 
     if (!token) {
-      alert("Kamu belum login!");
-      return;
+    setAlertModal({
+    show: true,
+    title: "Error",
+    message: "Kamu belum login!",
+    onClose: () => setAlertModal({ ...alertModal, show: false }),
+    });
+    return;
     }
+    setLoading(true);
+    setError(null);
 
     setLoading(true);
     try {
@@ -116,19 +139,25 @@ export default function InputBlogPage() {
         else if (value) data.append(key, value);
       });
 
-      // await axios.post("http://127.0.0.1:8000/api/admin/blogs", data, {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
       await adminApi.post("blogs", data, {
           headers: {
           "Content-Type": "multipart/form-data",
           },
         });
 
-      alert("Blog berhasil ditambahkan!");
+      setAlertModal({
+        show: true,
+        title: "Sukses",
+        message: "Blog berhasil ditambahkan!",
+        onClose: () => {
+        setAlertModal({ ...alertModal, show: false }); 
+        setShowModalLoading(true); 
+        setTimeout(() => {
+        router.push("/features/admin/blogs/view"); 
+        setShowModalLoading(false);
+        }, 500); 
+      },
+      });
       setFormData({
         title: "",
         slug: "",
@@ -139,7 +168,12 @@ export default function InputBlogPage() {
       });
     } catch (err) {
       console.error(err);
-      alert("Gagal menambah blog.");
+      setAlertModal({
+      show: true,
+      title: "Gagal",
+      message: "Gagal menambah blog. Lihat console untuk detail error.",
+      onClose: () => setAlertModal({ ...alertModal, show: false }),
+      });
     } finally {
       setLoading(false);
     }
@@ -147,10 +181,11 @@ export default function InputBlogPage() {
 
   return (
         <ProtectedRoute allowedRoles={["admin"]}>
-    <div className="flex">
-      {/* <Sidebar /> */}
-      <main className="flex-1 p-6 bg-slate-50 min-h-screen">
-        <div className="bg-white p-8 rounded-lg shadow-md border border-slate-200">
+    <div className={`flex ${hkGrotesk.className}`}>
+      {showModalLoading && <Loading />}
+      
+      <main className="flex-1 min-h-screen md:p-3 lg:p-6">
+        <div className="bg-white p-5 md:p-8 lg:p-8 rounded-xl shadow-sm border border-slate-200">
           <h1 className="text-2xl font-semibold mb-6 text-gray-800 drop-shadow-xs">
             Input Blog
           </h1>
@@ -158,7 +193,7 @@ export default function InputBlogPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
             {/* Judul */}
             <div>
-              <label className="block text-sm mb-1 text-gray-800 font-medium">
+              <label className="block text-md mb-1 text-gray-800 font-medium">
                 Judul
               </label>
               <input
@@ -173,7 +208,7 @@ export default function InputBlogPage() {
 
             {/* Slug */}
             <div>
-              <label className="block text-sm mb-1 text-gray-800 font-medium">
+              <label className="block text-md mb-1 text-gray-800 font-medium">
                 Slug (otomatis)
               </label>
               <input
@@ -188,7 +223,7 @@ export default function InputBlogPage() {
 
             {/* Kategori */}
             <div>
-              <label className="block text-sm mb-1 text-gray-800 font-medium">
+              <label className="block text-md mb-1 text-gray-800 font-medium">
                 Kategori
               </label>
               <input
@@ -202,7 +237,7 @@ export default function InputBlogPage() {
 
             {/* Email Penulis */}
             <div>
-              <label className="block text-sm mb-1 text-gray-800 font-medium">
+              <label className="block text-md mb-1 text-gray-800 font-medium">
                 Email Penulis
               </label>
               <input
@@ -216,7 +251,7 @@ export default function InputBlogPage() {
 
             {/* Isi Blog */}
             <div className="col-span-2">
-              <label className="block text-sm mb-1 text-gray-800 font-medium">
+              <label className="block text-md mb-1 text-gray-800 font-medium">
                 Isi Blog
               </label>
               <textarea
@@ -224,7 +259,7 @@ export default function InputBlogPage() {
                 value={formData.content}
                 onChange={handleChange}
                 className="w-full h-32 border border-slate-400 rounded-md px-3 py-3 outline-none"
-                placeholder="Tulis isi blog di sini..."
+                placeholder="Masukkan isi blog"
                 required
               />
             </div>
@@ -238,13 +273,13 @@ export default function InputBlogPage() {
                 onDragLeave={handleDrag}
                 onDrop={handleDrop}
                 className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer transition ${
-                  dragActive ? "border-cyan-700 bg-cyan-50" : "border-slate-300"
+                dragActive ? "border-cyan-700" : "text-cyan-800"
                 }`}
               >
                 <div className="flex flex-col items-center justify-center w-full h-full bg-white rounded-xl">
                   <Upload className="w-8 h-8 text-cyan-700 mb-3" />
                   <p className="text-md text-gray-800">
-                    <span className="font-semibold bg-gradient-to-r from-teal-600 to-cyan-700 bg-clip-text text-transparent">
+                    <span className="font-semibold text-cyan-700">
                       Click to upload
                     </span>{" "}
                     or drag and drop
@@ -287,9 +322,18 @@ export default function InputBlogPage() {
         </div>
       </main>
     </div>
+    <AlertInputBlogs
+    show={alertModal.show}
+    title={alertModal.title}
+    message={alertModal.message}
+    onClose={alertModal.onClose}
+    />
     </ProtectedRoute>
   );
 }
+
+
+
 
 
 
