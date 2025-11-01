@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import FavoriteButton from "@/app/components/FavoriteButton";
+import ExploreButton from "@/app/components/exploreButton/exploreButton"; 
 
 interface PaketTour {
   id: number;
@@ -86,15 +87,15 @@ export default function PaketCard({ paket }: PaketCardProps) {
         </h3>
 
         {/* Harga + Tombol Explore */}
-        <div className="flex flex-col md:flex-col lg:flex-row items-start md:items-start lg:items-center justify-between mt-2 gap-3 md:gap-4">
-  <p className="text-lg font-bold text-gray-900 drop-shadow-xs">
-    Rp{Number(paket.price).toLocaleString("id-ID")}
-  </p>
+                <div className="flex flex-col md:flex-col lg:flex-row items-start md:items-start lg:items-center justify-between mt-2 gap-3 md:gap-4">
+          <p className="text-lg font-bold text-gray-900 drop-shadow-xs">
+            Rp{Number(paket.price).toLocaleString("id-ID")}
+          </p>
 
-  <span className="bg-cyan-700 hover:bg-cyan-800 text-white px-6 py-2 rounded-lg shadow-sm transition-all duration-300 font-medium cursor-pointer">
-    Explore
-  </span>
-</div>
+          {/* Gunakan ExploreButton */}
+          <ExploreButton href={`/packages/${paket.slug}`} />
+        </div>
+
 
       </div>
     </Link>

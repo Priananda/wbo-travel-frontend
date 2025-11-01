@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import axios from "axios";
 import Image from "next/image";
 import Navbar from "@/app/components/navbar";
 import { hkGrotesk } from "@/app/fonts/fonts";

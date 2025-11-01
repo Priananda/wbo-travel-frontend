@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import Navbar from "@/app/components/navbar";
 import { Transition } from "@headlessui/react";
-import BillingFormCheckout from "@/app/components/billingFormCheckout/page";
-import OrderCheckout from "@/app/components/orderCheckout/page";
+import BillingFormCheckout from "@/app/components/billingFormCheckout/billingForm";
+import OrderCheckout from "@/app/components/orderCheckout/orderCheckout";
 import {
   CartItem,
   getCartCheckout,
