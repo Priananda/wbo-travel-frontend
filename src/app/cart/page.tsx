@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import Navbar from "@/app/components/navbar";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import Loading from "@/app/components/loading";
-import CartTable from "@/app/components/cartTable/page";
-import CartCheckout from "@/app/components/cartCheckout/page";
+import CartTable from "@/app/components/cartTable/tabelCart";
+import CartCheckout from "@/app/components/cartCheckout/cartCheckout";
 import { CartItem, getCart, removeCartItem } from "@/app/services/Cart";
 
 export default function CartPage() {

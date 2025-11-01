@@ -5,7 +5,7 @@ import PaketCard from "@/app/components/packagesCardDashboard";
 import { hkGrotesk } from "@/app/fonts/fonts";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import ExploreMoreButton from "@/app/components/exploreMoreButton/page";
+import ExploreMoreButton from "@/app/components/exploreMoreButton/exploreMoreButton";
 import { fetchPackagesDashboard } from "@/app/services/PackagesListDashboard";
 
 interface PaketTour {

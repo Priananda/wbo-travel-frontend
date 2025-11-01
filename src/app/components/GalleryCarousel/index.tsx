@@ -3,18 +3,47 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import tanahLot from "@/app/assets/images/tanahlot.jpg";
-import brokenBeach from "@/app/assets/images/brokenbeach.jpg";
 import { LaBelleAurore } from "@/app/fonts/fonts";
 
-const galleryItems = [
-  { id: 1, image: tanahLot, title: "Tanah Lot", description: "Pemandangan laut dan pura ikonik di Bali." },
-  { id: 2, image: brokenBeach, title: "Broken Beach", description: "Pantai legendaris dengan tebing alami memukau." },
-  { id: 3, image: tanahLot, title: "Tanah Lot", description: "Pura di atas batu karang dengan pemandangan sunset." },
-  { id: 4, image: brokenBeach, title: "Broken Beach", description: "Pantai eksotis dengan formasi batu unik." },
-  { id: 5, image: tanahLot, title: "Tanah Lot", description: "Destinasi favorit wisatawan di Bali." },
-  { id: 6, image: brokenBeach, title: "Broken Beach", description: "Panorama laut biru yang memukau." },
+import bg1 from "@/app/assets/images/bg-1.jpeg";
+import bg2 from "@/app/assets/images/bg-2.jpeg";
+import bg3 from "@/app/assets/images/bg-3.jpeg";
+import bg4 from "@/app/assets/images/bg-4.jpeg";
+import bg5 from "@/app/assets/images/bg-5.jpeg";
+import bg6 from "@/app/assets/images/bg-6.jpeg";
+import bg7 from "@/app/assets/images/bg-7.jpeg";
+import bg8 from "@/app/assets/images/bg-8.jpeg";
+import bg9 from "@/app/assets/images/bg-9.jpeg";
+import bg10 from "@/app/assets/images/bg-10.jpeg";
+import bg11 from "@/app/assets/images/bg-11.jpeg";
+import bg12 from "@/app/assets/images/bg-12.jpeg";
+import bg13 from "@/app/assets/images/bg-13.jpeg";
+import bg14 from "@/app/assets/images/bg-14.jpeg";
+import bg15 from "@/app/assets/images/bg-15.jpeg";
+import bg16 from "@/app/assets/images/bg-16.jpeg";
+import bg17 from "@/app/assets/images/bg-17.jpeg";
+
+export const galleryItems = [
+  { id: 1, image: bg1, title: "Kintamani", description: "Keindahan alam Bali yang mempesona." },
+  { id: 2, image: bg2, title: "Uluwatu", description: "Panorama laut biru yang memikat hati." },
+  { id: 3, image: bg3, title: "Uluwatu 2", description: "Tempat wisata dengan nuansa budaya khas Bali." },
+  { id: 4, image: bg4, title: "Penglipuran", description: "Pura di tepi pantai dengan pemandangan sunset." },
+  { id: 5, image: bg5, title: "Tirta Empul", description: "Air terjun tersembunyi dengan suasana tenang." },
+  { id: 6, image: bg6, title: "Bloom Garden", description: "Hamparan sawah hijau menyejukkan mata." },
+  { id: 7, image: bg7, title: "Pantai Pandawa", description: "Pantai pasir putih yang memesona." },
+  { id: 8, image: bg8, title: "Water Sport", description: "Keindahan alam tropis yang memanjakan jiwa." },
+  { id: 9, image: bg9, title: "Pantai Pandawa 2", description: "Suasana pedesaan dengan udara segar." },
+  { id: 10, image: bg10, title: "Pantai Melasti", description: "Spot foto ikonik dengan panorama alam." },
+  { id: 11, image: bg11, title: "Melasti Beach", description: "Pantai dengan tebing menakjubkan." },
+  { id: 12, image: bg12, title: "Tanah Barak Beach", description: "Tempat wisata romantis di Bali." },
+  { id: 13, image: bg13, title: "Tari Kecak", description: "Keindahan alam tersembunyi di pulau dewata." },
+  { id: 14, image: bg14, title: "Tegenungan", description: "Panorama pegunungan dan hutan tropis." },
+  { id: 15, image: bg15, title: "Taman Dedari", description: "Tempat meditasi dengan pemandangan indah." },
+  { id: 16, image: bg16, title: "Sari Timbul", description: "Kawasan wisata yang eksotis dan alami." },
+  { id: 17, image: bg17, title: "Bali farm Puse", description: "Pemandangan laut dan langit yang menakjubkan." },
 ];
+
+
 
 export default function GalleryCarousel() {
   const [current, setCurrent] = useState(0);

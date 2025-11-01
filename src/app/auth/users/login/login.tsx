@@ -20,7 +20,7 @@ export default function UserLoginPage() {
   const { login, setUser } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/users/dashboard";
+  const redirectUrl = searchParams.get("redirect") || "/home";
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
